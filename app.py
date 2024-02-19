@@ -1,6 +1,5 @@
 from flask import Flask , render_template ,  redirect , request , jsonify
 from datetime import datetime
-from classes import Week 
 from db import new_task , get_tasks , delete_task , done_task , get_task
 import json
 app = Flask(__name__)
