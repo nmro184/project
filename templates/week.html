@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js"></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'timeGridWeek', // Change to weekly view
+          // Set the date range to the current week
+          editable: true, // Enable drag-and-drop
+          eventOverlap: false, // Prevent events from overlapping
+          initialDate: new Date(), // Start from today
+          nowIndicator: true, // Show current time indicator
+          events: [
+                {
+                    title: 'Meeting kjvbdfkvbdfkjvbkjdfbvkjdfbvkjdfbvk',
+                    start: '2024-02-17T09:00:00',
+                    end: '2024-02-17T12:00:00'
+                },
+                {
+                    title: 'Lunch',
+                    start: '2024-02-17T12:30:00',
+                    end: '2024-02-17T13:30:00'
+                }
+                // Add more events as needed
+                ],
+          scrollTime: '09:00',
+          // Set the time range to display from the earliest event start time to the latest event end time
+          
+        });
+        calendar.render();
+      });
+
+    </script>
+  </head>
+  <body>
+    <div id='calendar'></div>
+  </body>
+</html>

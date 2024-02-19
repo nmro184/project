@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>login</title>
+</head>
+<body>
+    <div> {{message}} </div>
+    <form action="/home" class="login-form" id="loginForm" method="POST"> 
+        <input name = "username" type="text" placeholder="username">
+        <input name = "password" type="password" placeholder="password">
+       <button  class="login-button" onclick="validate()">login </button>   
+    </form>
+</body>
+<script>
+    function validate() {
+        event.preventDefault() 
+        var username = document.getElementById("loginForm").elements["username"].value;
+        var password = document.getElementById("loginForm").elements["password"].value;
+
+        if (!username || !password) {
+            alert("Please enter both username and password.");
+            return; 
+        }
+        document.getElementById("loginForm").action = "/home/" + username;
+        document.getElementById("loginForm").submit();
+
+    }
+</script>
+</html>

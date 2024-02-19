@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <style>
+        /* Include any additional inline styles here */
+        #createform {
+            display: none;
+        }
+        #editform{
+            display: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <h2 class = "welcome">{{username}}</h2>
+        <button class = "logout-button">log out</button>
+    </header>
+    <main>
+        <!-- Form for creating new tasks -->
+        <form action="/create/{{username}}" class="create" id="createform" style="display: none;">
+            <input type="text" name="name" placeholder="task name">
+            <input type="date" name="duedate" placeholder="duedate">
+            <input type="submit">
+        </form>
+        
+        <form action="/edit/{{username}}" class="edit" id="editform" style="display: none;">
+            <input type="text" name="name" >
+            <input type="date" name="duedate" >
+            <input type="submit">
+        </form>
+        <!-- Button to toggle the form visibility -->
+        <div class="line">
+            <button onclick="toggleForm()">Create new task</button>
+        </div>
+
+        <!-- Task list container -->
+        <div class="tasklist" id="mydiv">
+            <!-- Iterate over tasks and display them -->
+            {% for task in tasks %}
+                {% if task.done == 0 %}
+                    <div class="taskrow" id="task{{task.id}}">
+                        <!-- Button to mark task as done -->
+                        <button class="done-button" onclick="done({{task.id}})"> </button>
+                        <!-- Task details -->
+                        <object class="task"> {{task.name}} </object>
+                        <object class="task">{{task.duedate}}</object>
+                        <object class="task">{{task.day}}</object>
+                        <button onclick="toggleEdit({{task.id}})"> edit </button>
+                        <!-- Form to delete the task -->
+                        <form action="/delete/{{username}}" >
+                            <input type="hidden" name = "deleteid" value="{{task.id}}">
+                            <input type="submit" value="delete" class="delete-button">
+                        </form>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </main>
+</body>
+<script>
+    function toggleForm() {
+        var form = document.getElementById("createform");
+        form.style.display = "block";
+    }
+
+    function done(task_id) {
+        var task = document.getElementById(`task${task_id}`);
+        task.style.opacity = "0.3";
+    
+        fetch(`/done/${task_id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Remove the task row from the DOM after a delay
+                setTimeout (function(){
+                    console.log('Task marked as done successfully');
+                    task.remove();
+                }, 3000); // 3000 milliseconds = 3 seconds
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+            });
+    }
+    function toggleEdit(id){
+        var editForm = document.getElementById("editform");
+        editForm.style.display = "block";
+        fetch(`/api/task/${id}`)
+                    .then(response => response.json())
+                    .then (task => {
+                        editForm.elements['name'].value = task.name;
+                        editForm.elements['duedate'].value = task.duedate;
+                    })
+                    .catch(error => console.error('Error fetching task details:', error));     
+    }
+</script>
+</html>

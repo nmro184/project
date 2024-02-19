@@ -1,0 +1,119 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles */
+.create {
+    margin-bottom: 20px;
+}
+
+/* Task row styles */
+.taskrow {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    gap: 10px;
+}
+
+/* "Done" button styles */
+.done-button {
+    width: 25px; /* Adjust size as needed */
+    height: 25px; /* Adjust size as needed */
+    border-radius: 50%; /* To make it circular */
+    background-color: #4CAF50; /* Green color */
+    border: none;
+    color: white;
+    font-size: 10px; /* Adjust size as needed */
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.done-button::before {
+    content: "\2713"; /* Unicode checkmark character */
+    font-size: 15px; /* Adjust size as needed */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Task details styles */
+.task {
+    margin-right: 10px;
+}
+
+/* Delete button styles */
+.tasklist form {
+    margin-left: auto;
+}
+
+/* Link styles */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+.login-form{
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    margin-top: 25%;
+    margin-left: 45%;
+    justify-content: center;
+}
+.login-button{
+    margin:auto;
+    background-color: green;
+    align-self: center;
+    height: 30px;
+    width: 100px;
+   
+}
+.logout-button{
+    background-color: rgb(255, 0, 0);
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+header{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px; 
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.welcome{
+    margin-right: auto;
+}
+.delete-button {
+    background-color: #d74a58;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
