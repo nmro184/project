@@ -6,10 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/static/style.css">
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js"></script>
+
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -82,7 +86,7 @@
                 {% if task.done == 0 %}
                     <div class="taskrow" id="task{{task.id}}">
                         <!-- Button to mark task as done -->
-                        <button class="done-button" onclick="done({{task.id}})"> </button>
+                        <button class="done-button" onclick="done({{task.id}},'{{username}}')"> </button>
                         <!-- Task details -->
                         <object class="task"> {{task.name}} </object>
                         <object class="task">{{task.duedate}}</object>
@@ -106,11 +110,11 @@
         form.style.display = "block";
     }
 
-    function done(task_id) {
+    function done(task_id , username) {
         var task = document.getElementById(`task${task_id}`);
         task.style.opacity = "0.3";
     
-        fetch(`/done/${task_id}`)
+        fetch(`/done/${task_id}/${username}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
