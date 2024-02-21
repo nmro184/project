@@ -66,15 +66,6 @@ main {
     margin-left: auto;
 }
 
-/* Link styles */
-a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
 .login-form{
     width: fit-content;
     display: flex;
@@ -116,4 +107,13 @@ header{
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+}
+.edit-button {
+    background-color: #007bff; /* Blue color */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-left: 5px;
 }

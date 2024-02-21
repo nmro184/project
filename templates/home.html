@@ -64,14 +64,16 @@
     <main>
         <!-- Form for creating new tasks -->
         <form action="/create/{{username}}" class="create" id="createform" style="display: none;">
-            <input type="text" name="name" placeholder="task name">
-            <input type="date" name="duedate" placeholder="duedate">
+            <input type="text" name="title" placeholder="task title">
+            <input type="datetime-local" name = "start" placeholder="start time"> 
+            <input type="datetime-local" name = "end" placeholder="end time"> 
             <input type="submit">
         </form>
         
         <form action="/edit/{{username}}" class="edit" id="editform" style="display: none;">
-            <input type="text" name="name" >
-            <input type="date" name="duedate" >
+            <input type="text" name="title" placeholder="task title">
+            <input type="datetime-local" name = "start" placeholder="start time"> 
+            <input type="datetime-local" name = "end" placeholder="end time"> 
             <input type="submit">
         </form>
         <!-- Button to toggle the form visibility -->
@@ -88,10 +90,10 @@
                         <!-- Button to mark task as done -->
                         <button class="done-button" onclick="done({{task.id}},'{{username}}')"> </button>
                         <!-- Task details -->
-                        <object class="task"> {{task.name}} </object>
-                        <object class="task">{{task.duedate}}</object>
-                        <object class="task">{{task.day}}</object>
-                        <button onclick="toggleEdit({{task.id}})"> edit </button>
+                        <object class="task"> {{task.title}} </object>
+                        <object class="task">{{task.start}}</object>
+                        <object class="task">{{task.end}}</object>
+                        <button onclick="toggleEdit({{task.id}})" class = "edit-button"> edit </button>
                         <!-- Form to delete the task -->
                         <form action="/delete/{{username}}" >
                             <input type="hidden" name = "deleteid" value="{{task.id}}">
@@ -135,8 +137,9 @@
         fetch(`/api/task/${id}`)
                     .then(response => response.json())
                     .then (task => {
-                        editForm.elements['name'].value = task.name;
-                        editForm.elements['duedate'].value = task.duedate;
+                        editForm.elements['title'].value = task.title;
+                        editForm.elements['start'].value = task.start;
+                        editForm.elements['end'].value = task.end;
                     })
                     .catch(error => console.error('Error fetching task details:', error));     
     }

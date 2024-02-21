@@ -18,10 +18,7 @@ def home(username):
 #the route /create is used for entring a new task into the DB
 @app.route('/create/<username>' , methods = ['POST' , 'GET'])
 def create(username):
-    duedate_str = request.args['duedate']
-    duedate = datetime.strptime(duedate_str, '%Y-%m-%d')
-    day_of_week = duedate.strftime('%A')
-    new_task(name = request.args['name'] , duedate=request.args['duedate'] , day = day_of_week , username = username )
+    new_task(title = request.args['title'] ,start = request.args['start'] , end = request.args['end'], username = username )
     return redirect(f"/home/{username}")
 
 @app.route('/delete/<username>' , methods = ['POST', 'GET'])
@@ -37,4 +34,5 @@ def done(task_id , username):
 @app.route('/api/task/<task_id>')
 def get_task_api(task_id):
     task = get_task(task_id)
-    return jsonify(task.to_dict())
+    j_task = task.to_dict()
+    return jsonify(j_task)
