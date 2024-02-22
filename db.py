@@ -27,3 +27,7 @@ def get_done_tasks():
 def get_task(id):
     task_tuple = query(f"SELECT * from tasks WHERE id = {id}")
     return Task(task_tuple[0])
+
+def edit_task(task_id , title , start , end):
+    data = (title , start , end , task_id)
+    query("UPDATE tasks SET title = ? , start =? , end = ? WHERE id = ?" , data)

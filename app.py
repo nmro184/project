@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task
 import json
 app = Flask(__name__)
 
@@ -36,3 +36,15 @@ def get_task_api(task_id):
     task = get_task(task_id)
     j_task = task.to_dict()
     return jsonify(j_task)
+
+@app.route('/api/tasks/<username>')
+def json_tasks(username):
+    json_tasks = []
+    for task in get_tasks(username):
+        json_tasks.append((task.to_dict()))
+    return jsonify(json_tasks)
+
+@app.route('/edit/<username>')
+def edit(username):
+    edit_task(task_id = request.args['id'] ,title = request.args['title'] , start = request.args['start'], end = request.args['end'] )
+    return redirect(f"/home/{username}")

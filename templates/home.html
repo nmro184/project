@@ -16,6 +16,7 @@
     
     <script>
         var calender;
+        var username = "{{username}}";
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             calendarEl.id = 'myCalendar'; // Assign id attribute
@@ -45,6 +46,7 @@
                 console.log('Calendar view is rendered');
                 // Attempt to add an event
                 addEvent('New Event', '2024-02-25T10:00:00', '2024-02-25T12:00:00');
+                addEvents();
             }
             });
             calendar.render();
@@ -80,6 +82,7 @@
             <input type="text" name="title" placeholder="task title">
             <input type="datetime-local" name = "start" placeholder="start time"> 
             <input type="datetime-local" name = "end" placeholder="end time"> 
+            <input type="hidden" name ="id"> 
             <input type="submit">
         </form>
         <!-- Button to toggle the form visibility -->
@@ -146,6 +149,7 @@
                         editForm.elements['title'].value = task.title;
                         editForm.elements['start'].value = task.start;
                         editForm.elements['end'].value = task.end;
+                        editForm.elements['id'].value = id;
                     })
                     .catch(error => console.error('Error fetching task details:', error));     
     }
@@ -162,5 +166,33 @@
       // Add the event to the calendar
       calendar.addEvent(newEvent);
   }
+  function addEvents() {
+    getTasks()
+        .then(tasks => {
+            console.log("Tasks:", tasks);
+            tasks.map(task =>{
+                addEvent(title = task.title , start = task.start , end = task.end)
+            })
+        })
+        .catch(error => console.error('Error fetching tasks:', error));
+}
+
+function getTasks() {
+    return fetch(`/api/tasks/${username}`)
+        .then(response => response.json())
+        .then(tasks => { 
+            var events = tasks.map(task => ({
+                title: task.title,
+                start: task.start,
+                end: task.end
+            }));
+            return events;
+        })
+        .catch(error => {
+            console.error('Error fetching task details:', error);
+            throw error; // Propagate the error to the caller
+        });
+}
+
 </script>
 </html>
