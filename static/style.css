@@ -117,3 +117,9 @@ header{
     margin-right: 5px;
     margin-left: 5px;
 }
+.task-end{
+    margin-right: auto;
+}
+.delete-form{
+    margin-left: auto;
+}

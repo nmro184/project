@@ -21,9 +21,9 @@ def create(username):
     new_task(title = request.args['title'] ,start = request.args['start'] , end = request.args['end'], username = username )
     return redirect(f"/home/{username}")
 
-@app.route('/delete/<username>' , methods = ['POST', 'GET'])
-def delete(username):
-    delete_task(request.args['deleteid'])
+@app.route('/delete/<username>/<id>' , methods = ['POST', 'GET'])
+def delete(username , id):
+    delete_task(id)
     return redirect(f"/home/{username}")
 
 @app.route('/done/<task_id>/<username>')
