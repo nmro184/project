@@ -15,9 +15,11 @@
 
     
     <script>
+        var calender;
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            calendarEl.id = 'myCalendar'; // Assign id attribute
+            calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek', // Change to weekly view
             // Set the date range to the current week
             editable: true, // Enable drag-and-drop
@@ -39,7 +41,11 @@
                     ],
             scrollTime: '09:00',
             // Set the time range to display from the earliest event start time to the latest event end time
-            
+            viewDidMount: function(view) {
+                console.log('Calendar view is rendered');
+                // Attempt to add an event
+                addEvent('New Event', '2024-02-25T10:00:00', '2024-02-25T12:00:00');
+            }
             });
             calendar.render();
         });
@@ -143,5 +149,18 @@
                     })
                     .catch(error => console.error('Error fetching task details:', error));     
     }
+  
+  // Function to add a new event
+  function addEvent(title, start, end) {
+      // Create a new event object
+      var newEvent = {
+          title: title,
+          start: start,
+          end: end
+      };
+  
+      // Add the event to the calendar
+      calendar.addEvent(newEvent);
+  }
 </script>
 </html>
