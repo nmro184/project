@@ -48,3 +48,9 @@ def json_tasks(username):
 def edit(username):
     edit_task(task_id = request.args['id'] ,title = request.args['title'] , start = request.args['start'], end = request.args['end'] )
     return redirect(f"/home/{username}")
+
+@app.route('/update/<username>', methods=['POST'])
+def update(username):
+    data = request.json
+    edit_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'])
+    return redirect(f"/home/{username}")

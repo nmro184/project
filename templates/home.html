@@ -24,16 +24,43 @@
             initialView: 'timeGridWeek', // Change to weekly view
             // Set the date range to the current week
             editable: true, // Enable drag-and-drop
+            eventDrop: function(info) {
+                // When an event is dropped (i.e., its location is changed)
+                // You can access the event information from the 'info' object
+                var title = info.event.title;
+                var eventId = info.event.id; // Get the event ID
+                var newStart = info.event.start; // Get the new start date/time
+                var newEnd = info.event.end; // Get the new end date/time
+                fetch(`/update/${username}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: eventId,
+                        title: title,
+                        start: newStart,
+                        end: newEnd
+                    })
+                })
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+                
+            },
             eventOverlap: false, // Prevent events from overlapping
             initialDate: new Date(), // Start from today
             nowIndicator: true, // Show current time indicator
             events: [],
             scrollTime: '09:00',
-            // Set the time range to display from the earliest event start time to the latest event end time
+            slotMinTime: '08:00:00', // Set the earliest visible time (e.g., 8 AM)
+            slotMaxTime: '22:00:00', // Set the latest visible time (e.g., 6 PM)
             viewDidMount: function(view) {
                 console.log('Calendar view is rendered');
-                // Attempt to add an event
-                addEvent('New Event', '2024-02-25T10:00:00', '2024-02-25T12:00:00');
+
                 addEvents();
             }
             });
@@ -60,6 +87,7 @@
     <main>
         <!-- Form for creating new tasks -->
         <form action="/create/{{username}}" class="create" id="createform" style="display: none;">
+            <div class = "welcome">Add New Task</div>
             <input type="text" name="title" placeholder="task title">
             <input type="datetime-local" name = "start" placeholder="start time"> 
             <input type="datetime-local" name = "end" placeholder="end time"> 
@@ -67,6 +95,7 @@
         </form>
         
         <form action="/edit/{{username}}" class="edit" id="editform" style="display: none;">
+            <div class = "welcome">Edit Task</div>
             <input type="text" name="title" placeholder="task title">
             <input type="datetime-local" name = "start" placeholder="start time"> 
             <input type="datetime-local" name = "end" placeholder="end time"> 
@@ -75,7 +104,7 @@
         </form>
         <!-- Button to toggle the form visibility -->
         <div class="line">
-            <button onclick="toggleForm()">Create new task</button>
+            <button onclick="toggleForm()" class="create-button"></button>
         </div>
 
         <!-- Task list container -->
@@ -102,7 +131,12 @@
 <script>
     function toggleForm() {
         var form = document.getElementById("createform");
-        form.style.display = "block";
+        if (form.style.display == "block"){
+            form.style.display = "none"
+        }
+        else{
+            form.style.display = "block"
+        }
     }
 
     function done(task_id , username) {
@@ -126,36 +160,43 @@
     }
     function toggleEdit(id){
         var editForm = document.getElementById("editform");
-        editForm.style.display = "block";
-        fetch(`/api/task/${id}`)
-                    .then(response => response.json())
-                    .then (task => {
-                        editForm.elements['title'].value = task.title;
-                        editForm.elements['start'].value = task.start;
-                        editForm.elements['end'].value = task.end;
-                        editForm.elements['id'].value = id;
-                    })
-                    .catch(error => console.error('Error fetching task details:', error));     
+        if(editForm.style.display == "none"){
+            editForm.style.display = "block";
+                    fetch(`/api/task/${id}`)
+                        .then(response => response.json())
+                        .then (task => {
+                            editForm.elements['title'].value = task.title;
+                            editForm.elements['start'].value = task.start;
+                            editForm.elements['end'].value = task.end;
+                            editForm.elements['id'].value = id;
+                        })
+                        .catch(error => console.error('Error fetching task details:', error));  
+                    }
+                    else{
+                        editForm.style.display = "none";
+                    }
+                       
     }
   
   // Function to add a new event
-  function addEvent(title, start, end) {
+  function addEvent(id ,title, start, end) {
       // Create a new event object
       var newEvent = {
           title: title,
           start: start,
-          end: end
-      };
+          end: end,
+          id : id 
+      }
   
-      // Add the event to the calendar
-      calendar.addEvent(newEvent);
+      var addedEvent = calendar.addEvent(newEvent);
+    return addedEvent;
   }
   function addEvents() {
     getTasks()
         .then(tasks => {
             console.log("Tasks:", tasks);
             tasks.map(task =>{
-                addEvent(title = task.title , start = task.start , end = task.end)
+                addEvent(id = task.id ,title = task.title , start = task.start , end = task.end)
             })
         })
         .catch(error => console.error('Error fetching tasks:', error));
@@ -168,7 +209,8 @@ function getTasks() {
             var events = tasks.map(task => ({
                 title: task.title,
                 start: task.start,
-                end: task.end
+                end: task.end,
+                id : task.id,
             }));
             return events;
         })

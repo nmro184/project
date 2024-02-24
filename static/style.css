@@ -123,3 +123,54 @@ header{
 .delete-form{
     margin-left: auto;
 }
+.create-button {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 50%; /* Make it a circle */
+    width: 25px; /* Adjust size as needed */
+    height: 25px; /* Adjust size as needed */
+    font-size: 20px; /* Adjust size of create sign */
+    line-height: 25px; /* Center create sign vertically */
+    text-align: center; /* Center create sign horizontally */
+    cursor: pointer; /* Show pointer cursor on hover */
+    display: inline-block; /* Ensures proper centering */
+}
+
+.create-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.create-button::before {
+    content: "+"; /* Create sign */
+    position: relative;
+    top: -3px; /* Adjust vertical positioning to center */
+    right: -0.5px;
+}
+
+/* Style for input fields */
+form input[type="text"],
+form input[type="datetime-local"] {
+    width: 100%; /* Take up full width of container */
+    padding: 8px; /* Padding around input */
+    margin-bottom: 10px; /* Spacing between inputs */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+/* Style for submit button */
+form input[type="submit"] {
+    width: 100%; /* Take up full width of container */
+    padding: 10px; /* Padding around button */
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Style for placeholders */
+form input::placeholder {
+    color: #999; /* Placeholder text color */
+}
