@@ -31,17 +31,22 @@
                 var eventId = info.event.id; // Get the event ID
                 var newStart = info.event.start; // Get the new start date/time
                 var newEnd = info.event.end; // Get the new end date/time
+
+                var utcStart = formatDate(newStart);
+                var utcEnd = formatDate(newEnd);
+                var payload = {
+                    id: eventId,
+                    title: title,
+                    start: utcStart,
+                    end: utcEnd
+                };
+                console.log(payload)
                 fetch(`/update/${username}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        id: eventId,
-                        title: title,
-                        start: newStart,
-                        end: newEnd
-                    })
+                    body: JSON.stringify(payload)
                 })
                 .then(response => {
                     console.log(response)
@@ -230,6 +235,22 @@ function deleteTask(task_id){
     .catch(error => {
         console.error('There was a problem with your fetch operation:', error);
     });
+}
+function formatDate(dateString) {
+    // Parse the date string into a Date object
+    var date = new Date(dateString);
+
+    // Extract date components
+    var year = date.getFullYear();
+    var month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
+    var day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
+    var hours = ('0' + date.getHours()).slice(-2); // Add leading zero if needed
+    var minutes = ('0' + date.getMinutes()).slice(-2); // Add leading zero if needed
+
+    // Construct the formatted date string
+    var formattedDate = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+
+    return formattedDate;
 }
 </script>
 </html>
