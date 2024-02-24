@@ -67,11 +67,9 @@ main {
 }
 
 .login-form{
-    width: fit-content;
     display: flex;
     flex-direction: column;
     margin-top: 25%;
-    margin-left: 45%;
     justify-content: center;
 }
 .login-button{
@@ -149,6 +147,8 @@ header{
 }
 
 /* Style for input fields */
+form input[type="email"],
+form input[type="password"],
 form input[type="text"],
 form input[type="datetime-local"] {
     width: 100%; /* Take up full width of container */
@@ -173,4 +173,9 @@ form input[type="submit"] {
 /* Style for placeholders */
 form input::placeholder {
     color: #999; /* Placeholder text color */
+}
+.login-page{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
