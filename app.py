@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up
 import json
 app = Flask(__name__)
 
@@ -54,3 +54,7 @@ def update(username):
     data = request.json
     edit_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'])
     return redirect(f"/home/{username}")
+
+@app.route('/signup' , methods=['POST'])
+def signup():
+    sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])

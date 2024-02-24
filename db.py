@@ -31,3 +31,7 @@ def get_task(id):
 def edit_task(task_id , title , start , end):
     data = (title , start , end , task_id)
     query("UPDATE tasks SET title = ? , start =? , end = ? WHERE id = ?" , data)
+
+def sign_up(name , email , phone , username , password):
+    data = (name , email , phone , username , password)
+    query("INSERT INTO users (name, email , phone, username , password) VALUES (?, ? ,? , ? , ?)", data)
