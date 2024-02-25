@@ -1,13 +1,19 @@
-from flask import Flask , render_template ,  redirect , request , jsonify
+from flask import Flask , render_template ,  redirect , request , jsonify , flash , session
 from datetime import datetime
 from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up
 import json
 app = Flask(__name__)
 
+app.secret_key = 'jhckcvucuygvuyvouyublyiuvoyuycfdutd'
+
 tasks = []
 @app.route('/')
 def login():
-    return render_template("login.html")
+    message = None
+    if 'message' in session:
+        message = session['message']
+        del session['message']  # Remove the message from the session after displaying it
+    return render_template("login.html", message=message)
 
 
 # the /home route is used to showing all existing tasks mean while allowing to create , delete , edit tasks and to see past tasks
@@ -57,4 +63,12 @@ def update(username):
 
 @app.route('/signup' , methods=['POST'])
 def signup():
-    sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])
+    A = "0"
+    if (sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])):
+        session['message'] = "signed up succesfully"
+        A = "signed up succesfully"
+    else:
+        session['message'] = "Something went wrong"
+        A = "Something went wrong"
+    print(A)
+    return redirect("/")

@@ -38,7 +38,6 @@ body {
 /* Message styles */
 .login-page > div {
     margin-bottom: 20px;
-    color: #ff0000;
 }
 
 /* Form styles */
@@ -68,19 +67,27 @@ body {
 </style>
 <body>
     <div class="login-page">
-        <div> {{message}} </div>
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
         <form action="/home" id="loginForm" method="POST"> 
             <input name = "username" type="text" placeholder="username">
             <input name = "password" type="password" placeholder="password">
-        <button  class="login-button" onclick="validateLogin()">login </button>   
+            <div class="buttons">
+                <button  class="login-button" onclick="validateLogin()">login </button>
+                <button class="login-button" onclick="toggleForms()"> sign up</button>   
+            </div>
         </form>
-        <form action="/signup" id="signupForm" method="POST">
+        <form action="/signup" id="signupForm" method="POST" style="display: none;">
             <input name = "name" type="text" placeholder="full name">
             <input name = "email" type="email" placeholder="email">
             <input name = "phone" type="text" placeholder="phone number">
             <input name = "username" type="text" placeholder="username">
             <input name = "password" type="password" placeholder="password">
-            <button class="login-button" onclick="validateSignup()">sign up</button>
+            <div class="buttons">
+                <button class="login-button" onclick="validateSignup()">sign up</button>
+                <button class="login-button" onclick="toggleForms()"> sign in</button>   
+            </div>
         </form>
     </div>
 </body>
@@ -107,11 +114,47 @@ body {
         var password = document.getElementById("signupForm").elements["password"].value;
 
         if (!username || !password || !email || !phone || !name) {
-            alert("Please enter both username and password.");
+            alert("Please fill out all the nececery fields.");
             return; 
         }
         document.getElementById("signupForm").submit();
 
+    }
+    function validateEmail(email) {
+        // Regular expression for basic email validation
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function validateUsername(username) {
+        // Regular expression for username validation (alphanumeric characters and underscores, minimum length of 3)
+        var usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+        return usernameRegex.test(username);
+    }
+    
+    function validatePassword(password) {
+        // Regular expression for password validation (minimum length of 6)
+        return password.length >= 6;
+    }
+    
+    function validatePhone(phone) {
+        // Regular expression for phone number validation (optional: may include country code, area code, and dashes)
+        var phoneRegex = /^(\+\d{1,3})?[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+        return phoneRegex.test(phone);
+    }
+
+    function toggleForms(){
+        event.preventDefault() 
+        var signIn = document.getElementById("loginForm")
+        var signUp = document.getElementById("signupForm")
+
+        if (signIn.style.display == "none"){
+            signUp.style.display = "none"
+            signIn.style.display = "block"
+        }else{
+            signUp.style.display = "block"
+            signIn.style.display = "none"
+        }
     }
 </script>
 </html>
