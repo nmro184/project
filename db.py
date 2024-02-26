@@ -1,5 +1,5 @@
 import sqlite3
-from classes import Task
+from classes import Task , User
 DB_NAME = "tasks.db"
 FALSE = 0
 def query(sql: str = "", data: tuple = ()):
@@ -34,5 +34,21 @@ def edit_task(task_id , title , start , end):
 
 def sign_up(name , username , password , email , phone):
     data = (name , username , password , email , phone)
+    users_list = get_users()
+    for user in users_list:
+        if (user.username == username):
+            return "select a different username , this one is already used"
+        if (user.email == email):
+            return "this email is linked to another account"
+        if (user.phone == phone):
+            return "this phone number is linked to another account"
+        
     query("INSERT INTO users (name, username , password, email , phone) VALUES (?, ? ,? , ? , ?)", data)
-    return True
+    return "signed up succesfully"
+
+def get_users():
+    users_list =[]
+    users_tuple_list = query("SELECT * FROM users ")
+    for user in users_tuple_list:
+       users_list.append(User(user))
+    return users_list

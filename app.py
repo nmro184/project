@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify , flash , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users
 import json
 app = Flask(__name__)
 
@@ -15,7 +15,22 @@ def login():
         del session['message']  # Remove the message from the session after displaying it
     return render_template("login.html", message=message)
 
-
+@app.route('/login' , methods = ["POST"])
+def validate_login():
+    valid = False
+    username = request.form['username']
+    password = request.form['password']
+    users_list = get_users()
+    for user in users_list:
+        if (user.username == username):
+            if (user.password == password):
+                valid = True
+    if(valid):
+        return redirect(f"/home/{username}")
+    else:
+        session["message"] = "wrong username or password"
+        return redirect("/")
+    
 # the /home route is used to showing all existing tasks mean while allowing to create , delete , edit tasks and to see past tasks
 @app.route('/home/<username>' , methods = ['POST' , 'GET'])
 def home(username):
@@ -63,12 +78,5 @@ def update(username):
 
 @app.route('/signup' , methods=['POST'])
 def signup():
-    A = "0"
-    if (sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])):
-        session['message'] = "signed up succesfully"
-        A = "signed up succesfully"
-    else:
-        session['message'] = "Something went wrong"
-        A = "Something went wrong"
-    print(A)
+    session['message'] = sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])
     return redirect("/")

@@ -70,7 +70,7 @@ body {
         {% if message %}
         <div class="message">{{ message }}</div>
         {% endif %}
-        <form action="/home" id="loginForm" method="POST"> 
+        <form action="/login" id="loginForm" method="POST"> 
             <input name = "username" type="text" placeholder="username">
             <input name = "password" type="password" placeholder="password">
             <div class="buttons">
@@ -101,7 +101,6 @@ body {
             alert("Please enter both username and password.");
             return; 
         }
-        document.getElementById("loginForm").action = "/home/" + username;
         document.getElementById("loginForm").submit();
 
     }
@@ -117,8 +116,25 @@ body {
             alert("Please fill out all the nececery fields.");
             return; 
         }
-        document.getElementById("signupForm").submit();
-
+        else if(!validateEmail(email)){
+            alert("Please fill out a proper email addres.");
+            return;
+        }
+        else if (!validateUsername(username)){
+            alert("username is too short.");
+            return;
+        }
+        else if (!validatePassword(password)){
+            alert("password must be at least 6 char");
+            return;
+        }
+        else if (!validatePhone(phone)){
+            alert("please fill in a proper phone");
+            return;
+        }
+        else {
+            document.getElementById("signupForm").submit();
+        }
     }
     function validateEmail(email) {
         // Regular expression for basic email validation
