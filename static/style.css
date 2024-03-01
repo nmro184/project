@@ -7,12 +7,13 @@ body {
 }
 
 main {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 /* Form styles */
@@ -24,14 +25,23 @@ main {
 .taskrow {
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+    gap: 10px;
+    background-color: #f0f0f0; /* Lighter background color */
+   
     display: flex;
     align-items: center;
-    height: 50px;
-    gap: 10px;
+    height: 50px; /* Adjust height as needed */
+    max-width: 250px; /* Increased width for better readability */
 }
+
+.task-card:hover {
+    background-color: #e0e0e0; /* Darker background color on hover */
+}
+
+.task-card .task-title {
+    font-weight: bold; /* Make title text bold */
+}
+
 
 /* "Done" button styles */
 .done-button {
@@ -45,6 +55,7 @@ main {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    margin-left: 3px;
 }
 
 .done-button::before {
@@ -105,6 +116,8 @@ header{
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    border-radius: 10px;
+
 }
 .edit-button {
     background-color: #007bff; /* Blue color */
@@ -114,9 +127,7 @@ header{
     cursor: pointer;
     margin-right: 5px;
     margin-left: 5px;
-}
-.task-end{
-    margin-right: auto;
+    border-radius: 10px;
 }
 .delete-form{
     margin-left: auto;
@@ -227,4 +238,89 @@ form input::placeholder {
 
 .buttons .y.c {
     background-color: #f44336; /* Red for task type 'c' */
+}
+.task-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.task-card {
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 2px solid #63707c; /* Thinner border */
+    border-radius: 10px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: calc(16.666% - 20px); /* 16.666% to fit 6 cards in a row */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
+}
+
+.task-title {
+    flex-grow: 1; /* Allow title to grow and occupy remaining space */
+}
+
+/* Additional styling for buttons */
+.edit-button,
+.delete-button,
+.done-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Adjust spacing for buttons */
+
+/* Recurrence form styles */
+.recurrence-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px; /* Adjust margin as needed */
+    padding: 10px;
+    background-color: #ffffff; /* Lighter background color */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Label styles */
+.recurrence-form label {
+    margin-bottom: 5px; /* Adjust margin as needed */
+}
+
+/* Select styles */
+.recurrence-form select,
+.recurrence-form input[type="number"],
+.recurrence-form input[type="checkbox"] {
+    margin-bottom: 10px; /* Adjust margin as needed */
+    padding: 8px; /* Padding around input */
+    border: 1px solid #ffffff; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Adjust spacing between elements */
+.recurrence-form select,
+.recurrence-form input[type="number"],
+.recurrence-form input[type="checkbox"] {
+    margin-right: 10px; /* Adjust margin-right as needed */
+}
+
+/* Adjust alignment of checkboxes */
+.recurrence-form label input[type="checkbox"] {
+    margin-right: 5px; /* Adjust margin-right as needed */
+}
+.recurrence {
+    background-color: #45a049; /* Blue color */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.recurrence:hover {
+    background-color: #3f9444; /* Darker blue color on hover */
 }

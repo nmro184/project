@@ -7,9 +7,9 @@ def query(sql: str = "", data: tuple = ()):
         cur = conn.cursor()
         return cur.execute(sql, data).fetchall()
 
-def new_task(title, username , start  = "", end = ""):
-    data = (title, start ,end , FALSE , username )
-    query("INSERT INTO tasks (title, start , end, done , username) VALUES (?, ? ,? , ? , ?)", data)
+def new_task(type ,title, username , start  = "", end = ""):
+    data = (type, title, start ,end , FALSE , username )
+    query("INSERT INTO tasks (type, title, start , end, done , username) VALUES (?,?, ? ,? , ? , ?)", data)
 
 def get_tasks(username):
     task_tuple_list = query(f"SELECT * FROM tasks WHERE username = '{username}'")

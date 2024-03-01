@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.11/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     
     <script>
@@ -75,7 +77,8 @@
                 left: 'prev,next today', // Add buttons for previous, next, and today
                 center: 'title', // Add title to the center
                 right: 'dayGridMonth,timeGridWeek,timeGridDay' // Add buttons for different views
-            }
+            },
+            eventColor: 'black'
             
             });
             calendar.render();
@@ -107,9 +110,65 @@
                 <button class ="y" onclick="toggleCreate(event ,'routine')">routine</button>
                 <button class = "y" onclick="toggleCreate(event , 'habit')">habit</button>
             </div>
+            <button class = "recurrence" onclick="togglerecurrence(event)">recurrence</button>
             <input type="text" name="title" placeholder="task title">
             <input type="datetime-local" name = "start" placeholder="start time"> 
             <input type="datetime-local" name = "end" placeholder="end time"> 
+            <div id="recurrenceForm" class ="recurrence-form" style = "display: none;">
+                <label for="frequency">Frequency:</label>
+                <select id="frequency" name="frequency" >
+                    <option value="weekly">Weekly</option>
+                    <option value="daily">Daily</option>
+                    <option value="monthly">Monthly</option>
+                    <!-- Add more options as needed -->
+                </select><br>
+              
+                <label for="interval">repeat every:</label>
+                <input type="number" id="interval" name="interval" min="1" value="1"><br>
+              
+                <label class="days-label">Days of the Week:</label><br>
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="sunday" name="daysOfWeek" value="1" style="margin-right: 5px;">
+                    <label for="sunday">Sunday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="monday" name="daysOfWeek" value="2" style="margin-right: 5px;">
+                    <label for="monday">Monday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="tuesday" name="daysOfWeek" value="3" style="margin-right: 5px;">
+                    <label for="tuesday">Tuesday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="wednesday" name="daysOfWeek" value="4" style="margin-right: 5px;">
+                    <label for="wednesday">Wednesday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="thursday" name="daysOfWeek" value="5" style="margin-right: 5px;">
+                    <label for="thursday">Thursday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="friday" name="daysOfWeek" value="6" style="margin-right: 5px;">
+                    <label for="friday">Friday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="saturday" name="daysOfWeek" value="7" style="margin-right: 5px;">
+                    <label for="saturday">Saturday</label>
+                </div>
+                
+
+
+                <!-- Repeat for other days of the week -->
+              
+                <!-- Add more recurrence options as needed -->
+            </div>
+              
             <input type="submit">
         </form>
         
@@ -127,24 +186,23 @@
         </div>
 
         <!-- Task list container -->
-        <div class="tasklist" id="mydiv">
+        <div class="task-list" id="mydiv">
             <!-- Iterate over tasks and display them -->
             {% for task in tasks %}
-                {% if task.done == 0 %}
-                    <div class="taskrow" id="task{{task.id}}">
+                {% if task.type == 'errand' and task.done == 0 %}
+                    <div class="task-card" id="task{{task.id}}">
                         <!-- Button to mark task as done -->
                         <!-- Task details -->
                         <object class="task-title"> {{task.title}} </object>
-                        <object class="task-start">{{task.start}}</object>
-                        <object class="task-end">{{task.end}}</object>
                         <button onclick="toggleEdit({{task.id}})" class = "edit-button"> edit </button>
                         <button class = "delete-button" onclick="deleteTask({{task.id}})"> delete</button>
                         <button class="done-button" onclick="done({{task.id}},'{{username}}')"> </button>
                     </div>
                 {% endif %}
             {% endfor %}
-            <div id='calendar'></div>
+            
         </div>
+        <div id='calendar'></div>
     </main>
 </body>
 <script>
@@ -215,7 +273,9 @@
         .then(tasks => {
             console.log("Tasks:", tasks);
             tasks.map(task =>{
-                addEvent(id = task.id ,title = task.title , start = task.start , end = task.end)
+                if (task.type !== "errand") {
+                    addEvent(id = task.id, title = task.title, start = task.start, end = task.end);
+                }
             })
         })
         .catch(error => console.error('Error fetching tasks:', error));
@@ -344,19 +404,19 @@ var form = document.getElementById("createform");
 // Create hidden input fields for errand, routine, and habit
 var errandInput = document.createElement("input");
 errandInput.type = "hidden";
-errandInput.name = "taskType";
+errandInput.name = "type";
 errandInput.value = "errand";
 
 
 var routineInput = document.createElement("input");
 routineInput.type = "hidden";
-routineInput.name = "taskType";
+routineInput.name = "type";
 routineInput.value = "routine";
 
 
 var habitInput = document.createElement("input");
 habitInput.type = "hidden";
-habitInput.name = "taskType";
+habitInput.name = "type";
 habitInput.value = "habit";
 
 
@@ -381,7 +441,31 @@ habitInput.value = "habit";
 
 }
 
-
+function togglerecurrence(event){
+    event.preventDefault()
+    form = document.getElementById("recurrenceForm");
+    if (form.style.display == 'none'){
+        form.style.display = 'block'
+    }else{
+        form.style.display = 'none'
+    }
+}
+// Add event listener to frequency select element
+$('#frequency').change(function() {
+    var selectedFrequency = $(this).val();
+    
+    // Check if frequency is daily
+    if (selectedFrequency === 'daily') {
+        // Hide or disable options for selecting specific days of the week
+        $('.day-checkbox').hide(); // or .prop('disabled', true);
+        $('.days-label').hide()
+        
+    } else {
+        // Show or enable options for selecting specific days of the week
+        $('.day-checkbox').show(); // or .prop('disabled', false);
+        $('.days-label').show()
+    }
+});
 
 </script>
 </html>

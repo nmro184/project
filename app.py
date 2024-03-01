@@ -39,9 +39,13 @@ def home(username):
 #the route /create is used for entring a new task into the DB
 @app.route('/create/<username>' , methods = ['POST' , 'GET'])
 def create(username):
-    new_task(title = request.args['title'] ,start = request.args['start'] , end = request.args['end'], username = username )
-    return redirect(f"/home/{username}")
-
+    if request.args['type'] == "errand":
+        new_task(type = 'errand', title = request.args['title'] , username = username)
+        return redirect(f"/home/{username}")
+    else:
+        new_task(request.args['type'], title = request.args['title'] ,start = request.args['start'] , end = request.args['end'], username = username )
+        return redirect(f"/home/{username}")
+    
 @app.route('/delete/<username>/<id>' , methods = ['POST', 'GET'])
 def delete(username , id):
     delete_task(id)
