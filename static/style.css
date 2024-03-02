@@ -210,7 +210,7 @@ form input::placeholder {
     margin-top: 20px;
 }
 
-.buttons .y {
+.buttons .form-type {
     background-color: #4CAF50; /* Green background */
     border: none;
     color: white;
@@ -223,22 +223,10 @@ form input::placeholder {
     cursor: pointer;
 }
 
-.buttons .y:hover {
+.buttons .form-type:hover {
     background-color: #45a049; /* Darker green on hover */
 }
 
-/* Additional styling for each button */
-.buttons .y.a {
-    background-color: #4CAF50; /* Green for task type 'a' */
-}
-
-.buttons .y.b {
-    background-color: #008CBA; /* Blue for task type 'b' */
-}
-
-.buttons .y.c {
-    background-color: #f44336; /* Red for task type 'c' */
-}
 .task-list {
     display: flex;
     flex-wrap: wrap;
@@ -312,15 +300,18 @@ form input::placeholder {
 .recurrence-form label input[type="checkbox"] {
     margin-right: 5px; /* Adjust margin-right as needed */
 }
-.recurrence {
-    background-color: #45a049; /* Blue color */
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-}
 
 .recurrence:hover {
     background-color: #3f9444; /* Darker blue color on hover */
 }
+
+.recurrence-button {
+    margin-top : 10px;
+    margin-left: 10px;
+    width: 30px; /* Adjust the width */
+    height: 30px; /* Adjust the height */
+    background-image: url('/static/recurrence-icon.jpeg'); /* Path to your recurrence icon */
+    background-size: cover; /* Ensure the image covers the element */
+}
+
+

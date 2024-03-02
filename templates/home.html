@@ -85,15 +85,6 @@
         });
 
     </script>
-    <style>
-        /* Include any additional inline styles here */
-        #createform {
-            display: none;
-        }
-        #editform{
-            display: none;
-        }
-    </style>
     
 </head>
 <body>
@@ -103,17 +94,17 @@
     </header>
     <main>
         <!-- Form for creating new tasks -->
-        <form action="/create/{{username}}" class="create" id="createform" style="display: none;">
-            <div class = "welcome">Add New Task</div>
-            <div class = "buttons - a">
-                <button class = "y" onclick="toggleCreate(event ,'errand')">errand</button>
-                <button class ="y" onclick="toggleCreate(event ,'routine')">routine</button>
-                <button class = "y" onclick="toggleCreate(event , 'habit')">habit</button>
+        <form action="/create/{{username}}" class="create" id="createForm" style="display: none;">
+            <div id = "welcome" class = "welcome">Add New Task</div>
+            <div class = "buttons" id ="buttons-div">
+                <button id = "errand-button" class ="form-type" onclick="toggleCreate(event ,'errand')">errand</button>
+                <button id = "routine-button" class ="form-type" onclick="toggleCreate(event ,'routine')">routine</button>
+                <button id = "habit-button" class = "form-type" onclick="toggleCreate(event , 'habit')">habit</button>
+                <button class = "recurrence-button" onclick="togglerecurrence(event)"></button>
             </div>
-            <button class = "recurrence" onclick="togglerecurrence(event)">recurrence</button>
             <input type="text" name="title" placeholder="task title">
-            <input type="datetime-local" name = "start" placeholder="start time"> 
-            <input type="datetime-local" name = "end" placeholder="end time"> 
+            <input id = "start-time-input" type="datetime-local" name = "start" placeholder="start time"> 
+            <input id = "end-time-input" type="datetime-local" name = "end" placeholder="end time"> 
             <div id="recurrenceForm" class ="recurrence-form" style = "display: none;">
                 <label for="frequency">Frequency:</label>
                 <select id="frequency" name="frequency" >
@@ -207,7 +198,7 @@
 </body>
 <script>
     function toggleForm() {
-        var form = document.getElementById("createform");
+        var form = document.getElementById("createForm");
         if (form.style.display == "block"){
             form.style.display = "none"
         }
@@ -326,119 +317,25 @@ function formatDate(dateString) {
 
     return formattedDate;
 }
-function toggleCreate(event, type) {
+function toggleCreate(event , type){
     event.preventDefault();
+    form = document.getElementById("createForm");
+    var typeInput = document.createElement("input");
+    typeInput.type = "hidden"
+    typeInput.name = "type"
+    typeInput.value = type
+    form.appendChild(typeInput);
     
-    var form = document.getElementById("createform");
-
-    // Remove all children elements from the form
-    while (form.firstChild) {
-        form.removeChild(form.firstChild);
+    var startInput = document.getElementById("start-time-input");
+    var endInput = document.getElementById("end-time-input");
+    if(type == 'errand'){
+        startInput.style.display = "none"
+        endInput.style.display = "none"
+       
+    }else{
+        startInput.style.display = "block"
+        endInput.style.display = "block"
     }
-    // Get a reference to the form
-var form = document.getElementById("createform");
-
-// Create a div for the welcome message
-var welcomeDiv = document.createElement("div");
-welcomeDiv.className = "welcome";
-welcomeDiv.textContent = "Add New Task";
-form.appendChild(welcomeDiv);
-
-// Create a div for the buttons
-var buttonsDiv = document.createElement("div");
-buttonsDiv.className = "buttons - a";
-form.appendChild(buttonsDiv);
-
-// Create buttons for errand, routine, and habit
-var errandButton = document.createElement("button");
-errandButton.className = "y";
-errandButton.textContent = "errand";
-errandButton.onclick = function(event) {
-    toggleCreate(event, "errand");
-};
-buttonsDiv.appendChild(errandButton);
-
-var routineButton = document.createElement("button");
-routineButton.className = "y";
-routineButton.textContent = "routine";
-routineButton.onclick = function(event) {
-    toggleCreate(event, "routine");
-};
-buttonsDiv.appendChild(routineButton);
-
-var habitButton = document.createElement("button");
-habitButton.className = "y";
-habitButton.textContent = "habit";
-habitButton.onclick = function(event) {
-    toggleCreate(event, "habit");
-};
-buttonsDiv.appendChild(habitButton);
-
-// Create input for task title
-var titleInput = document.createElement("input");
-titleInput.type = "text";
-titleInput.name = "title";
-titleInput.placeholder = "task title";
-
-
-// Create input for start time
-var startInput = document.createElement("input");
-startInput.type = "datetime-local";
-startInput.name = "start";
-startInput.placeholder = "start time";
-
-// Create input for end time
-var endInput = document.createElement("input");
-endInput.type = "datetime-local";
-endInput.name = "end";
-endInput.placeholder = "end time";
-
-
-// Create submit button
-var submitButton = document.createElement("input");
-submitButton.type = "submit";
-
-// Get a reference to the form
-var form = document.getElementById("createform");
-
-// Create hidden input fields for errand, routine, and habit
-var errandInput = document.createElement("input");
-errandInput.type = "hidden";
-errandInput.name = "type";
-errandInput.value = "errand";
-
-
-var routineInput = document.createElement("input");
-routineInput.type = "hidden";
-routineInput.name = "type";
-routineInput.value = "routine";
-
-
-var habitInput = document.createElement("input");
-habitInput.type = "hidden";
-habitInput.name = "type";
-habitInput.value = "habit";
-
-
-    // Add a new input element based on the type
-    if (type === "errand") {
-        form.appendChild(titleInput);
-        form.appendChild(submitButton);
-        form.appendChild(errandInput);
-    }
-    else{
-        form.appendChild(titleInput);
-        form.appendChild(startInput);
-        form.appendChild(endInput);
-        form.appendChild(submitButton);
-        if(type === 'routine'){
-            form.appendChild(routineInput);
-        }else{
-            form.appendChild(habitInput);
-        }
-
-    }
-
 }
 
 function togglerecurrence(event){
