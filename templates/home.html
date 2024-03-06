@@ -20,6 +20,7 @@
         var calender;
         var username = "{{username}}";
         document.addEventListener('DOMContentLoaded', function() {
+            
             var calendarEl = document.getElementById('calendar');
             calendarEl.id = 'myCalendar'; // Assign id attribute
             calendar = new FullCalendar.Calendar(calendarEl, {
@@ -67,6 +68,8 @@
             slotMaxTime: '22:00:00', // Set the latest visible time (e.g., 6 PM)
             viewDidMount: function(view) {
                 console.log('Calendar view is rendered');
+                console.log('mkskskksks')
+                console.log(calendar.getEvents());
                 calendar.getEvents().forEach(function(event) {
                     event.remove();
                 });
@@ -102,58 +105,51 @@
                 <button id = "habit-button" class = "form-type" onclick="toggleCreate(event , 'habit')">habit</button>
                 <button class = "recurrence-button" onclick="togglerecurrence(event)"></button>
             </div>
+            <input id = "recurrence-flag" type="hidden" name = "recurrence-flag" value ="off">
             <input type="text" name="title" placeholder="task title">
             <input id = "start-time-input" type="datetime-local" name = "start" placeholder="start time"> 
             <input id = "end-time-input" type="datetime-local" name = "end" placeholder="end time"> 
             <div id="recurrenceForm" class ="recurrence-form" style = "display: none;">
-                <label for="frequency">Frequency:</label>
-                <select id="frequency" name="frequency" >
-                    <option value="weekly">Weekly</option>
-                    <option value="daily">Daily</option>
-                    <option value="monthly">Monthly</option>
-                    <!-- Add more options as needed -->
-                </select><br>
-              
-                <label for="interval">repeat every:</label>
-                <input type="number" id="interval" name="interval" min="1" value="1"><br>
-              
-                <label class="days-label">Days of the Week:</label><br>
+
+                <label id = "days-label" class="days-label">Days of the Week:</label><br>
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="sunday" name="daysOfWeek" value="1" style="margin-right: 5px;">
+                    <input type="checkbox" id="sunday" name="daysOfWeek" value="0" style="margin-right: 5px;">
                     <label for="sunday">Sunday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="monday" name="daysOfWeek" value="2" style="margin-right: 5px;">
+                    <input type="checkbox" id="monday" name="daysOfWeek" value="1" style="margin-right: 5px;">
                     <label for="monday">Monday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="tuesday" name="daysOfWeek" value="3" style="margin-right: 5px;">
+                    <input type="checkbox" id="tuesday" name="daysOfWeek" value="2" style="margin-right: 5px;">
                     <label for="tuesday">Tuesday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="wednesday" name="daysOfWeek" value="4" style="margin-right: 5px;">
+                    <input type="checkbox" id="wednesday" name="daysOfWeek" value="3" style="margin-right: 5px;">
                     <label for="wednesday">Wednesday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="thursday" name="daysOfWeek" value="5" style="margin-right: 5px;">
+                    <input type="checkbox" id="thursday" name="daysOfWeek" value="4" style="margin-right: 5px;">
                     <label for="thursday">Thursday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="friday" name="daysOfWeek" value="6" style="margin-right: 5px;">
+                    <input type="checkbox" id="friday" name="daysOfWeek" value="5" style="margin-right: 5px;">
                     <label for="friday">Friday</label>
                 </div>
                 
                 <div class="day-checkbox" style="display: flex; align-items: center;">
-                    <input type="checkbox" id="saturday" name="daysOfWeek" value="7" style="margin-right: 5px;">
+                    <input type="checkbox" id="saturday" name="daysOfWeek" value="6" style="margin-right: 5px;">
                     <label for="saturday">Saturday</label>
                 </div>
-                
-
+                <div>
+                    <label for=""> insert recurrence end date</label>
+                    <input id = "end-recurrence-input" type="datetime-local" name = "end-recurrence"> 
+                </div>
 
                 <!-- Repeat for other days of the week -->
               
@@ -247,25 +243,24 @@
     }
   
   // Function to add a new event
-  function addEvent(id ,title, start, end) {
+  function addEvent(id ,title, start, end , recurrence) {
       // Create a new event object
-      var newEvent = {
-          title: title,
-          start: start,
-          end: end,
-          id : id 
+    var newEvent = {
+        title: title,
+        start: start,
+        end: end,
+        id : id 
       }
-  
+    
       var addedEvent = calendar.addEvent(newEvent);
     return addedEvent;
   }
   function addEvents() {
     getTasks()
         .then(tasks => {
-            console.log("Tasks:", tasks);
             tasks.map(task =>{
                 if (task.type !== "errand") {
-                    addEvent(id = task.id, title = task.title, start = task.start, end = task.end);
+                    addEvent(id = task.id, title = task.title, start = task.start, end = task.end , recurrence = task.recurrence);
                 }
             })
         })
@@ -280,6 +275,7 @@ function getTasks() {
                 title: task.title,
                 start: task.start,
                 end: task.end,
+                recurrence : task.recurrence,
                 id : task.id,
             }));
             return events;
@@ -328,11 +324,21 @@ function toggleCreate(event , type){
     
     var startInput = document.getElementById("start-time-input");
     var endInput = document.getElementById("end-time-input");
+    var checkboxes = document.getElementsByClassName('day-checkbox')
+    var daysLabel = document.getElementById('days-label')
     if(type == 'errand'){
         startInput.style.display = "none"
         endInput.style.display = "none"
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].style.display = 'none';
+        }
+        daysLabel.style.display = 'none'
        
     }else{
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].style.display = 'block';
+        }
+        daysLabel.style.display = 'block';
         startInput.style.display = "block"
         endInput.style.display = "block"
     }
@@ -341,15 +347,19 @@ function toggleCreate(event , type){
 function togglerecurrence(event){
     event.preventDefault()
     form = document.getElementById("recurrenceForm");
+    flag = document.getElementById('recurrence-flag');
     if (form.style.display == 'none'){
         form.style.display = 'block'
+        flag.value = 'on'
+
     }else{
         form.style.display = 'none'
+        flag.value = 'off'
     }
 }
 // Add event listener to frequency select element
-$('#frequency').change(function() {
-    var selectedFrequency = $(this).val();
+//$('#frequency').change(function() {
+/*  var selectedFrequency = $(this).val();
     
     // Check if frequency is daily
     if (selectedFrequency === 'daily') {
@@ -362,7 +372,7 @@ $('#frequency').change(function() {
         $('.day-checkbox').show(); // or .prop('disabled', false);
         $('.days-label').show()
     }
-});
+});*/
 
 </script>
 </html>

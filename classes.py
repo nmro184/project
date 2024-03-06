@@ -1,3 +1,4 @@
+import json
 class Task:
     name : str
     duedate : str
@@ -8,8 +9,12 @@ class Task:
         self.title = task_tuple[2]
         self.start = task_tuple[3]
         self.end = task_tuple[4]
-        self.done = task_tuple[5]
-        self.username = task_tuple[6]
+        if task_tuple[5] is None or task_tuple[5] == "":
+            self.recurrence = ''   
+        else:
+           self.recurrence = json.loads(task_tuple[5])
+        self.done = task_tuple[6]
+        self.username = task_tuple[7]
     
     def __str__(self):
         return f"{self.name}{self.duedate}{self.hour}"
@@ -21,6 +26,7 @@ class Task:
             'title': self.title,
             'start': self.start,
             'end' : self.end,
+            'recurrence' : self.recurrence ,
             'done' : self.done,
             'username' : self.username
         }

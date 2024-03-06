@@ -1,6 +1,6 @@
-from flask import Flask , render_template ,  redirect , request , jsonify , flash , session
+from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task
 import json
 app = Flask(__name__)
 
@@ -39,12 +39,19 @@ def home(username):
 #the route /create is used for entring a new task into the DB
 @app.route('/create/<username>' , methods = ['POST' , 'GET'])
 def create(username):
-    print(request.args['frequency'])
+    if(request.args['recurrence-flag'] == 'on'):
+        recurrence = {
+            'daysOfWeek' : request.args.getlist('daysOfWeek'),
+            'until' : request.args['end-recurrence']
+        }
+        new_recurreing_task(type = request.args['type'] , title = request.args['title'] ,start = request.args['start'] , end = request.args['end'],recurrence = recurrence, username = username)
+        return redirect(f"/home/{username}")
+    
     if request.args['type'] == "errand":
         new_task(type = 'errand', title = request.args['title'] , username = username)
         return redirect(f"/home/{username}")
     else:
-        new_task(request.args['type'], title = request.args['title'] ,start = request.args['start'] , end = request.args['end'], username = username )
+        new_task(request.args['type'], title = request.args['title'] ,start = request.args['start'] , end = request.args['end'],recurrence = recurrence, username = username )
         return redirect(f"/home/{username}")
     
 @app.route('/delete/<username>/<id>' , methods = ['POST', 'GET'])

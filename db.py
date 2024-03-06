@@ -1,5 +1,7 @@
 import sqlite3
+import json
 from classes import Task , User
+from datetime import datetime , timedelta
 DB_NAME = "tasks.db"
 FALSE = 0
 def query(sql: str = "", data: tuple = ()):
@@ -7,9 +9,9 @@ def query(sql: str = "", data: tuple = ()):
         cur = conn.cursor()
         return cur.execute(sql, data).fetchall()
 
-def new_task(type ,title, username , start  = "", end = ""):
-    data = (type, title, start ,end , FALSE , username )
-    query("INSERT INTO tasks (type, title, start , end, done , username) VALUES (?,?, ? ,? , ? , ?)", data)
+def new_task(type ,title ,username, start  = "", end = "", recurrence="" ):
+    data = (type, title, start ,end ,recurrence, FALSE , username )
+    query("INSERT INTO tasks (type , title , start , end , recurrence , done , username) VALUES (? , ? , ? , ? , ? , ? , ?)", data)
 
 def get_tasks(username):
     task_tuple_list = query(f"SELECT * FROM tasks WHERE username = '{username}'")
@@ -52,3 +54,21 @@ def get_users():
     for user in users_tuple_list:
        users_list.append(User(user))
     return users_list
+
+def new_recurreing_task(type , title ,start , end , recurrence , username):
+    current_date = datetime.strptime(start, '%Y-%m-%dT%H:%M')
+    current_end_date = datetime.strptime(end, '%Y-%m-%dT%H:%M')
+    end_date  = datetime.strptime(recurrence['until'], '%Y-%m-%dT%H:%M')
+    days_to_recur = recurrence['daysOfWeek']
+    while (current_date <= end_date):
+        week_day = current_date.weekday() +1
+        if (week_day == 7 ):
+            week_day = 0
+        if str(week_day) in days_to_recur:
+            current_start = current_date.strftime('%Y-%m-%dT%H:%M')
+            current_end = current_end_date.strftime('%Y-%m-%dT%H:%M')
+            data = (type, title, current_start ,current_end ,json.dumps(recurrence), FALSE , username )
+            query("INSERT INTO tasks (type , title , start , end , recurrence , done , username) VALUES (? , ? , ? , ? , ? , ? , ?)", data)
+        current_date += timedelta(days=1)
+        current_end_date += timedelta(days=1)
+    return
