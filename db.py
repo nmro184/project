@@ -87,3 +87,23 @@ def generate_unique_group_id():
         result = query("SELECT COUNT(*) FROM tasks WHERE recurrence LIKE ?", ('%"group_id": "{}"%'.format(group_id),))
         if result[0][0] == 0:
             return group_id
+
+def edit_recurring_task(task_id , title , start , end , recurrence , alltasks , startDiff , endDiff):
+    if(alltasks):
+        results = query("SELECT * FROM tasks WHERE recurrence LIKE ?", ('%"group_id": "{}"%'.format(recurrence),))
+        for result in results:
+            new_start = add_hours(result[3] , startDiff)
+            new_end = add_hours(result[4] , endDiff)
+            data = (new_start , new_end , result[0])
+            query("UPDATE tasks SET  start =? , end = ? WHERE id = ?" , data)
+    else:
+        data = (title , start , end , task_id )
+        query("UPDATE tasks SET title = ? , start =? , end = ? WHERE id = ?" , data)
+    return
+
+def add_hours(date_string, hours_to_add):
+    date_obj = datetime.strptime(date_string, '%Y-%m-%dT%H:%M')
+    modified_date = date_obj + timedelta(hours=hours_to_add)
+    modified_date_string = modified_date.strftime('%Y-%m-%dT%H:%M')
+
+    return modified_date_string

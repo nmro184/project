@@ -14,16 +14,33 @@ var calender;
             var eventId = info.event.id; // Get the event ID
             var newStart = info.event.start; // Get the new start date/time
             var newEnd = info.event.end; // Get the new end date/time
-
+            var recurrence = info.event.extendedProps.recurrence_id;
             var utcStart = formatDate(newStart);
             var utcEnd = formatDate(newEnd);
+            
             var payload = {
                 id: eventId,
                 title: title,
                 start: utcStart,
-                end: utcEnd
+                end: utcEnd,
+                recurrence : recurrence
             };
-            console.log(payload)
+            if (recurrence !== undefined){
+                var confirmEditAll = confirm("Do you want to edit all the instances of that event?");
+                payload.alltasks = confirmEditAll
+                if (confirmEditAll){
+                    var oldStart = info.oldEvent.start;
+                    var oldEnd = info.oldEvent.end;
+                    var startTimeDifference = newStart.getTime() - oldStart.getTime(); // in milliseconds
+                    var startHoursDifference = startTimeDifference / (1000 * 60 * 60);
+                    var endTimeDifference = newEnd.getTime() - oldEnd.getTime(); // in milliseconds
+                    var endHoursDifference = endTimeDifference / (1000 * 60 * 60);
+                    payload.startDiff = startHoursDifference;
+                    payload.endDiff = endHoursDifference;
+                }
+            } 
+            
+            
             fetch(`/update/${username}`, {
                 method: 'POST',
                 headers: {
@@ -162,7 +179,7 @@ function addEvent(id ,title, start, end , recurrence) {
       id : id 
     }
     if (recurrence != ''){
-      newEvent.customAttribute = recurrence.group_id
+      newEvent.recurrence_id = recurrence.group_id
     }
   
     var addedEvent = calendar.addEvent(newEvent);
@@ -215,10 +232,20 @@ function toggleEdit(id){
                 fetch(`/api/task/${id}`)
                     .then(response => response.json())
                     .then (task => {
-                        editForm.elements['title'].value = task.title;
-                        editForm.elements['start'].value = task.start;
-                        editForm.elements['end'].value = task.end;
-                        editForm.elements['id'].value = id;
+                        if(task.type === 'errand'){
+                            editForm.elements['title'].value = task.title;
+                            editForm.elements['id'].value = id;
+                            editForm.elements['start'].style.display = 'none';
+                            editForm.elements['end'].style.display = 'none';
+                        }else{
+                            editForm.elements['start'].style.display = 'block';
+                            editForm.elements['end'].style.display = 'block';
+                            editForm.elements['title'].value = task.title;
+                            editForm.elements['start'].value = task.start;
+                            editForm.elements['end'].value = task.end;
+                            editForm.elements['id'].value = id;
+                        }
+                        
                     })
                     .catch(error => console.error('Error fetching task details:', error));  
                 }

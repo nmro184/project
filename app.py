@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task
 import json
 app = Flask(__name__)
 
@@ -86,8 +86,16 @@ def edit(username):
 @app.route('/update/<username>', methods=['POST'])
 def update(username):
     data = request.json
-    edit_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'])
-    return redirect(f"/home/{username}")
+    if data.get('recurrence') is not None:
+        alltasks =data['alltasks']
+        if alltasks:
+            edit_recurring_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'], recurrence =data['recurrence'] , alltasks = alltasks , startDiff = data['startDiff'],endDiff = data['endDiff'] )
+        else:
+            edit_recurring_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'], recurrence =data['recurrence'] , alltasks = alltasks ,startDiff = '' , endDiff = ''  )
+        return redirect(f"/home/{username}")
+    else:
+        edit_task(task_id=data['id'], title=data['title'], start=data['start'], end=data['end'])
+        return redirect(f"/home/{username}")
 
 @app.route('/signup' , methods=['POST'])
 def signup():
