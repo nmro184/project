@@ -14,82 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/functions.js" defer ></script>
-
-
-    
-    <script>
-        var calender;
-        var username = "{{username}}";
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            var calendarEl = document.getElementById('calendar');
-            calendarEl.id = 'myCalendar'; // Assign id attribute
-            calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek', // Change to weekly view
-            // Set the date range to the current week
-            editable: true, // Enable drag-and-drop
-            eventDrop: function(info) {
-                // When an event is dropped (i.e., its location is changed)
-                // You can access the event information from the 'info' object
-                var title = info.event.title;
-                var eventId = info.event.id; // Get the event ID
-                var newStart = info.event.start; // Get the new start date/time
-                var newEnd = info.event.end; // Get the new end date/time
-
-                var utcStart = formatDate(newStart);
-                var utcEnd = formatDate(newEnd);
-                var payload = {
-                    id: eventId,
-                    title: title,
-                    start: utcStart,
-                    end: utcEnd
-                };
-                console.log(payload)
-                fetch(`/update/${username}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-                
-            },
-            eventOverlap: false, // Prevent events from overlapping
-            initialDate: new Date(), // Start from today
-            nowIndicator: true, // Show current time indicator
-            events: [],
-            scrollTime: '09:00',
-            slotMinTime: '06:00:00', // Set the earliest visible time (e.g., 8 AM)
-            slotMaxTime: '24:00:00', // Set the latest visible time (e.g., 6 PM)
-            viewDidMount: function(view) {
-                console.log('Calendar view is rendered');
-                console.log('mkskskksks')
-                console.log(calendar.getEvents());
-                calendar.getEvents().forEach(function(event) {
-                    event.remove();
-                });
-
-                addEvents();
-            },
-            headerToolbar: {
-                left: 'prev,next today', // Add buttons for previous, next, and today
-                center: 'title', // Add title to the center
-                right: 'dayGridMonth,timeGridWeek,timeGridDay' // Add buttons for different views
-            },
-            eventColor: 'black'
-            
-            });
-            calendar.render();
-        });
-
-    </script>
-    
+    <script> var username = "{{username}}"; </script>
 </head>
 <body>
     <header>
@@ -152,10 +77,7 @@
                     <label for=""> insert recurrence end date</label>
                     <input id = "end-recurrence-input" type="datetime-local" name = "end-recurrence"> 
                 </div>
-
-                <!-- Repeat for other days of the week -->
-              
-                <!-- Add more recurrence options as needed -->
+                
             </div>
               
             <input type="submit">
@@ -194,105 +116,4 @@
         <div id='calendar'></div>
     </main>
 </body>
-<script>
-    function toggleForm() {
-        var form = document.getElementById("createForm");
-        if (form.style.display == "block"){
-            form.style.display = "none"
-        }
-        else{
-            form.style.display = "block"
-        }
-    }
-
-    function done(task_id , username) {
-        var task = document.getElementById(`task${task_id}`);
-        task.style.opacity = "0.3";
-    
-        fetch(`/done/${task_id}/${username}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Remove the task row from the DOM after a delay
-                setTimeout (function(){
-                    console.log('Task marked as done successfully');
-                    task.remove();
-                }, 3000); // 3000 milliseconds = 3 seconds
-            })
-            .catch(error => {
-                console.error('There was a problem with your fetch operation:', error);
-            });
-    }
-    function toggleEdit(id){
-        var editForm = document.getElementById("editform");
-        if(editForm.style.display == "none"){
-            editForm.style.display = "block";
-                    fetch(`/api/task/${id}`)
-                        .then(response => response.json())
-                        .then (task => {
-                            editForm.elements['title'].value = task.title;
-                            editForm.elements['start'].value = task.start;
-                            editForm.elements['end'].value = task.end;
-                            editForm.elements['id'].value = id;
-                        })
-                        .catch(error => console.error('Error fetching task details:', error));  
-                    }
-                    else{
-                        editForm.style.display = "none";
-                    }
-                       
-    }
-  
-  // Function to add a new event
-  function addEvent(id ,title, start, end , recurrence) {
-      // Create a new event object
-    var newEvent = {
-        title: title,
-        start: start,
-        end: end,
-        id : id 
-      }
-      if (recurrence != ''){
-        newEvent.customAttribute = recurrence.group_id
-      }
-    
-      var addedEvent = calendar.addEvent(newEvent);
-    return addedEvent;
-  }
-  function addEvents() {
-    getTasks()
-        .then(tasks => {
-            tasks.map(task =>{
-                if (task.type !== "errand") {
-                    addEvent(id = task.id, title = task.title, start = task.start, end = task.end , recurrence = task.recurrence);
-                }
-            })
-        })
-        .catch(error => console.error('Error fetching tasks:', error));
-}
-
-function getTasks() {
-    return fetch(`/api/tasks/${username}`)
-        .then(response => response.json())
-        .then(tasks => { 
-            var events = tasks.map(task => ({
-                title: task.title,
-                start: task.start,
-                end: task.end,
-                recurrence : task.recurrence,
-                id : task.id,
-            }));
-            return events;
-        })
-        .catch(error => {
-            console.error('Error fetching task details:', error);
-            throw error; // Propagate the error to the caller
-        });
-}
-
-
-
-
-</script>
 </html>
