@@ -39,6 +39,7 @@ def home(username):
 #the route /create is used for entring a new task into the DB
 @app.route('/create/<username>' , methods = ['POST' , 'GET'])
 def create(username):
+    recurrence = None
     if(request.args['recurrence-flag'] == 'on'):
         recurrence = {
             'daysOfWeek' : request.args.getlist('daysOfWeek'),

@@ -1,4 +1,5 @@
 import sqlite3
+import uuid
 import json
 from classes import Task , User
 from datetime import datetime , timedelta
@@ -60,6 +61,7 @@ def new_recurreing_task(type , title ,start , end , recurrence , username):
     current_end_date = datetime.strptime(end, '%Y-%m-%dT%H:%M')
     end_date  = datetime.strptime(recurrence['until'], '%Y-%m-%dT%H:%M')
     days_to_recur = recurrence['daysOfWeek']
+    recurrence['group_id'] = generate_unique_group_id()
     while (current_date <= end_date):
         week_day = current_date.weekday() +1
         if (week_day == 7 ):
@@ -72,3 +74,16 @@ def new_recurreing_task(type , title ,start , end , recurrence , username):
         current_date += timedelta(days=1)
         current_end_date += timedelta(days=1)
     return
+
+
+import uuid  # For generating unique IDs
+
+def generate_unique_group_id():
+    while True:
+        # Generate a new UUID (unique ID)
+        group_id = str(uuid.uuid4())
+        
+        # Check if the generated ID already exists in any task's recurrence attribute
+        result = query("SELECT COUNT(*) FROM tasks WHERE recurrence LIKE ?", ('%"group_id": "{}"%'.format(group_id),))
+        if result[0][0] == 0:
+            return group_id
