@@ -56,6 +56,35 @@ var calender;
             });
             
         },
+        eventClick: function(info) {
+            // Get the clicked event object
+            var event = info.event;
+
+            // Create an option bar above the clicked event
+            var optionBar = document.createElement('div');
+            optionBar.className = 'option-bar';
+            
+            // Create buttons for different actions
+            var editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.addEventListener('click', function() {
+                // Call a function to handle edit action
+                toggleEdit(event.id);
+            });
+            optionBar.appendChild(editButton);
+
+            var deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                // Call a function to handle delete action
+                deleteTask(event.id);
+            });
+            optionBar.appendChild(deleteButton);
+
+            // Add the option bar above the clicked event
+            var eventElement = info.el;
+            eventElement.appendChild(optionBar);
+        },
         eventOverlap: false, // Prevent events from overlapping
         initialDate: new Date(), // Start from today
         nowIndicator: true, // Show current time indicator
@@ -72,6 +101,7 @@ var calender;
             });
 
             addEvents();
+            addErrands();
         },
         headerToolbar: {
             left: 'prev,next today', // Add buttons for previous, next, and today
@@ -158,6 +188,7 @@ function getTasks() {
         .then(tasks => { 
             var events = tasks.map(task => ({
                 title: task.title,
+                type : task.type,
                 start: task.start,
                 end: task.end,
                 recurrence : task.recurrence,
@@ -254,4 +285,58 @@ function toggleEdit(id){
                 }
                    
 }
+function toggleOptions(id){
+    deleteButton = document.getElementById(`delete${id}`);
+    editButton = document.getElementById(`edit${id}`);
+    if (deleteButton.style.display == 'inline-block'){
+        deleteButton.style.display = 'none'
+        editButton.style.display = 'none'
+    }else{
+        deleteButton.style.display = 'inline-block'
+        editButton.style.display = 'inline-block'
+    }
 
+    
+}
+function addErrand(task) {
+    var listItem = document.createElement("li");
+    listItem.textContent = task.title;
+    listItem.onclick = function() {
+        toggleOptions(task.id); // Call toggleOptions with task id
+    };
+    listItem.className = 'option-bar2';
+    listItem.id = `Item${task.id}`
+
+    var editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = function() {
+        toggleEdit(task.id); // Call toggleOptions with task id
+    };
+    editButton.id = `edit${task.id}`
+    editButton.style.display = 'none'
+    listItem.appendChild(editButton);
+
+    var deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+        deleteTask(task.id); // Call deleteTask with task id
+    };
+    deleteButton.id = `delete${task.id}`
+    deleteButton.style.display ='none'
+    listItem.appendChild(deleteButton);
+
+    document.getElementById("taskList").appendChild(listItem);
+}
+
+function addErrands() {
+    getTasks()
+        .then(tasks => {
+            tasks.map(task =>{
+                if (task.type === "errand" && task.done !== 1) {
+                    addErrand(task);
+                }
+            })
+        })
+        .catch(error => console.error('Error fetching tasks:', error));
+  }
+  

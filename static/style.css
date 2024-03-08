@@ -246,10 +246,8 @@ form input::placeholder {
 }
 
 .task-title {
-    flex-grow: 1; /* Allow title to grow and occupy remaining space */
+   flex-grow: 1; /* Allow title to grow and occupy remaining space */
 }
-
-/* Additional styling for buttons */
 .edit-button,
 .delete-button,
 .done-button {
@@ -315,3 +313,54 @@ form input::placeholder {
 }
 
 
+.option-bar {
+    position: absolute;
+    top: -40px; /* Adjust as needed */
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Style for buttons */
+.option-bar button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: #010e1b;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Style for button hover effect */
+.option-bar button:hover {
+    background-color: #0056b3;
+}
+
+.option-bar2 {
+    padding: 10px;
+    border-bottom: 2px solid #ccc; /* Increase border width and change color */
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Style for buttons */
+.option-bar2 button {
+    margin-right: 5px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #010e1b;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Style for button hover effect */
+.option-bar2 button:hover {
+    background-color: #0056b3;
+}

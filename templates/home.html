@@ -77,7 +77,7 @@
                     <label for=""> insert recurrence end date</label>
                     <input id = "end-recurrence-input" type="datetime-local" name = "end-recurrence"> 
                 </div>
-                
+
             </div>
               
             <input type="submit">
@@ -95,25 +95,10 @@
         <div class="line">
             <button onclick="toggleForm()" class="create-button"></button>
         </div>
-
-        <!-- Task list container -->
-        <div class="task-list" id="mydiv">
-            <!-- Iterate over tasks and display them -->
-            {% for task in tasks %}
-                {% if task.type == 'errand' and task.done == 0 %}
-                    <div class="task-card" id="task{{task.id}}">
-                        <!-- Button to mark task as done -->
-                        <!-- Task details -->
-                        <object class="task-title"> {{task.title}} </object>
-                        <button onclick="toggleEdit({{task.id}})" class = "edit-button"> edit </button>
-                        <button class = "delete-button" onclick="deleteTask({{task.id}})"> delete</button>
-                        <button class="done-button" onclick="done({{task.id}},'{{username}}')"> </button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            
-        </div>
-        <div id='calendar'></div>
+            <ul id ='taskList' ></ul>
+        
+            <div id='calendar'></div>
+        
     </main>
 </body>
 </html>
