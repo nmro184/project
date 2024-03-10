@@ -25,15 +25,15 @@
         <!-- Form for creating new tasks -->
         <form action="/create/{{username}}" class="create" id="createForm" style="display: none;">
             <div id = "welcome" class = "welcome">Add New Task</div>
-            <div class = "buttons" id ="buttons-div">
-                <button id = "errand-button" class ="form-type" onclick="toggleCreate(event ,'errand')">errand</button>
-                <button id = "routine-button" class ="form-type" onclick="toggleCreate(event ,'routine')">routine</button>
-                <button id = "habit-button" class = "form-type" onclick="toggleCreate(event , 'habit')">habit</button>
+            <div class = "buttons-container" id ="buttons-div">
+                <button id = "errand-button" class ="form-type" onclick="toggleCreate(event ,'errand')">Errand</button>
+                <button id = "routine-button" class ="form-type" onclick="toggleCreate(event ,'routine')">Routine</button>
+                <button id = "habit-button" class = "pressed" onclick="toggleCreate(event , 'habit')">Habit</button>
                 <button class = "recurrence-button" onclick="togglerecurrence(event)"></button>
             </div>
             <input id = "recurrence-flag" type="hidden" name = "recurrence-flag" value ="off">
             <input type="text" name="title" placeholder="task title">
-            <input id = "start-time-input" type="datetime-local" name = "start" placeholder="start time"> 
+            <input id = "start-time-input" type="datetime-local" name = "start" placeholder="start time" onchange="updateEndTime(this.value)"> 
             <input id = "end-time-input" type="datetime-local" name = "end" placeholder="end time"> 
             <input type="hidden" id ="type-input" value="habit" name = "type">
             <div id="recurrenceForm" class ="recurrence-form" style = "display: none;">
@@ -75,7 +75,7 @@
                 </div>
                 <div>
                     <label for=""> insert recurrence end date</label>
-                    <input id = "end-recurrence-input" type="datetime-local" name = "end-recurrence"> 
+                    <input id = "end-recurrence-input" type="date" name = "end-recurrence"> 
                 </div>
 
             </div>

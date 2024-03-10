@@ -56,13 +56,14 @@ var calender;
             });
             
         },
-        eventClick: function(info) {
+        eventDidMount: function(info) {
             // Get the clicked event object
             var event = info.event;
 
             // Create an option bar above the clicked event
             var optionBar = document.createElement('div');
             optionBar.className = 'option-bar';
+            optionBar.id = `optionBar${event.id}`
             
             // Create buttons for different actions
             var editButton = document.createElement('button');
@@ -80,11 +81,29 @@ var calender;
                 deleteTask(event.id);
             });
             optionBar.appendChild(deleteButton);
-
+            
+            var doneButton = document.createElement('button');
+            doneButton.textContent = 'Done';
+            doneButton.addEventListener('click', function() {
+                // Call a function to handle done action
+                doneTask(event.id);
+            });
+            optionBar.appendChild(doneButton);
             // Add the option bar above the clicked event
             var eventElement = info.el;
+            optionBar.style.display = 'none';
             eventElement.appendChild(optionBar);
         },
+        eventClick:function(info){
+            optionBar = document.getElementById(`optionBar${info.event.id}`);
+            if (optionBar.style.display == 'none'){
+                optionBar.style.display = 'inline-block';
+            }else{
+                optionBar.style.display = 'none';
+            }
+        },
+
+
         eventOverlap: false, // Prevent events from overlapping
         initialDate: new Date(), // Start from today
         nowIndicator: true, // Show current time indicator
@@ -133,25 +152,40 @@ function toggleCreate(event , type){
     typeInput = document.getElementById("type-input");
     typeInput.value = type
     
+    var errandButton = document.getElementById('errand-button');
+    var routineButton = document.getElementById('routine-button');
+    var habitButton = document.getElementById('habit-button');
     var startInput = document.getElementById("start-time-input");
     var endInput = document.getElementById("end-time-input");
-    var checkboxes = document.getElementsByClassName('day-checkbox')
-    var daysLabel = document.getElementById('days-label')
+    var checkboxes = document.getElementsByClassName('day-checkbox');
+    var daysLabel = document.getElementById('days-label');
     if(type == 'errand'){
-        startInput.style.display = "none"
-        endInput.style.display = "none"
+        startInput.style.display = "none";
+        endInput.style.display = "none";
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].style.display = 'none';
         }
-        daysLabel.style.display = 'none'
+        daysLabel.style.display = 'none';
+        errandButton.className = 'pressed';
+        routineButton.className = 'form-type';
+        habitButton.className = 'form-type';
        
     }else{
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].style.display = 'block';
         }
         daysLabel.style.display = 'block';
-        startInput.style.display = "block"
-        endInput.style.display = "block"
+        startInput.style.display = "block";
+        endInput.style.display = "block";
+        if (type == 'routine'){
+            errandButton.className = 'form-type';
+            routineButton.className = 'pressed';
+            habitButton.className = 'form-type';
+        }else{
+            errandButton.className = 'form-type';
+            routineButton.className = 'form-type';
+            habitButton.className = 'pressed';
+        }
     }
 }
 function formatDate(dateString) {
@@ -191,6 +225,7 @@ function getTasks() {
                 type : task.type,
                 start: task.start,
                 end: task.end,
+                done : task.done,
                 recurrence : task.recurrence,
                 id : task.id,
             }));
@@ -237,20 +272,13 @@ function toggleForm() {
     }
 }
 
-function done(task_id , username) {
-    var task = document.getElementById(`task${task_id}`);
-    task.style.opacity = "0.3";
-
+function doneTask(task_id) {
+    
     fetch(`/done/${task_id}/${username}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            // Remove the task row from the DOM after a delay
-            setTimeout (function(){
-                console.log('Task marked as done successfully');
-                task.remove();
-            }, 3000); // 3000 milliseconds = 3 seconds
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
@@ -288,12 +316,15 @@ function toggleEdit(id){
 function toggleOptions(id){
     deleteButton = document.getElementById(`delete${id}`);
     editButton = document.getElementById(`edit${id}`);
+    doneButton = document.getElementById(`done${id}`)
     if (deleteButton.style.display == 'inline-block'){
         deleteButton.style.display = 'none'
         editButton.style.display = 'none'
+        doneButton.style.display = 'none'
     }else{
         deleteButton.style.display = 'inline-block'
         editButton.style.display = 'inline-block'
+        doneButton.style.display = 'inline-block'
     }
 
     
@@ -325,6 +356,15 @@ function addErrand(task) {
     deleteButton.style.display ='none'
     listItem.appendChild(deleteButton);
 
+    var doneButton = document.createElement('button');
+    doneButton.textContent = 'Done';
+    doneButton.onclick = function() {
+        doneTask(task.id); // Call deleteTask with task id
+    };
+    doneButton.id = `done${task.id}`
+    doneButton.style.display ='none'
+    listItem.appendChild(doneButton);
+
     document.getElementById("taskList").appendChild(listItem);
 }
 
@@ -339,4 +379,8 @@ function addErrands() {
         })
         .catch(error => console.error('Error fetching tasks:', error));
   }
-  
+
+  function updateEndTime(value) {
+    // Set the value of the end input field to the value of the start input field
+    document.getElementById("end-time-input").value = value;
+}

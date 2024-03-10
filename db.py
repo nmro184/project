@@ -59,7 +59,7 @@ def get_users():
 def new_recurreing_task(type , title ,start , end , recurrence , username):
     current_date = datetime.strptime(start, '%Y-%m-%dT%H:%M')
     current_end_date = datetime.strptime(end, '%Y-%m-%dT%H:%M')
-    end_date  = datetime.strptime(recurrence['until'], '%Y-%m-%dT%H:%M')
+    end_date = datetime.strptime(recurrence['until'], '%Y-%m-%d')
     days_to_recur = recurrence['daysOfWeek']
     recurrence['group_id'] = generate_unique_group_id()
     while (current_date <= end_date):
