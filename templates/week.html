@@ -1,86 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 10px;
-            
-        
-            border-bottom: 2px solid #ccc; /* Increase border width and change color */
-            font-size: 18px
-          
-        }
-        li:last-child {
-            border-bottom: none;
-        }
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/analytics.js" defer></script>
+  <title>Simple Bar Graph</title>
 </head>
 <body>
-    <div class="container">
-        <h1>To-Do List</h1>
-        <input type="text" id="taskInput" placeholder="Add new task...">
-        <button onclick="addTask()">Add Task</button>
-        <ul id="taskList">
-            <!-- Tasks will be added here dynamically -->
-        </ul>
-    </div>
+  <canvas id="myChart" width="400" height="400"></canvas>
 
-    <script>
-        function addTask() {
-            var input = document.getElementById("taskInput");
-            var task = input.value.trim();
-            input.value = "";
-
-            if (task !== "") {
-                var listItem = document.createElement("li");
-                listItem.textContent = task;
-                document.getElementById("taskList").appendChild(listItem);
-            }
-        }
-    </script>
+  <script>
+    var username = "{{username}}"
+  </script>
 </body>
 </html>

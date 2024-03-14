@@ -108,29 +108,53 @@ var calender;
         initialDate: new Date(), // Start from today
         nowIndicator: true, // Show current time indicator
         events: [],
+        weekNumbers: true,
         scrollTime: '09:00',
         slotMinTime: '06:00:00', // Set the earliest visible time (e.g., 8 AM)
         slotMaxTime: '24:00:00', // Set the latest visible time (e.g., 6 PM)
         viewDidMount: function(view) {
-            console.log('Calendar view is rendered');
-            console.log('mkskskksks')
-            console.log(calendar.getEvents());
             calendar.getEvents().forEach(function(event) {
                 event.remove();
             });
 
             addEvents();
-            addErrands();
         },
         headerToolbar: {
             left: 'prev,next today', // Add buttons for previous, next, and today
-            center: 'title', // Add title to the center
+            center: 'weekRecapButton', // Add title to the center
             right: 'dayGridMonth,timeGridWeek,timeGridDay' // Add buttons for different views
         },
+        customButtons: {
+            weekRecapButton: {
+                text: 'Recap',
+                click: function() {
+                    var weekRecapButton = document.querySelector('.fc-weekRecapButton-button');
+                    var start = weekRecapButton.dataset.start;
+                    var end = weekRecapButton.dataset.end;
+                    // Construct the URL with query parameters
+                    var url = `/data?start=${start}&end=${end}&username=${username}`;
+
+                    // Navigate to the new page
+                    window.location.href = url;
+
+                    alert('Week Recap button clicked!');
+                },
+                
+            }
+        },
+        datesSet: function(info) {
+            console.log('nananana');
+            var weekRecapButton = document.querySelector('.fc-weekRecapButton-button');
+            weekRecapButton.dataset.start = formatDate(info.start);
+            weekRecapButton.dataset.end = formatDate(info.end);
+        },
+          
         eventColor: 'black'
         
         });
         calendar.render();
+        addErrands();
+        
     });
 function togglerecurrence(event){
     event.preventDefault()

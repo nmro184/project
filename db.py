@@ -107,3 +107,7 @@ def add_hours(date_string, hours_to_add):
     modified_date_string = modified_date.strftime('%Y-%m-%dT%H:%M')
 
     return modified_date_string
+
+def get_errands(start , end , username):
+    data = (start, end, 'errand' , username)
+    return query(f"SELECT * FROM tasks WHERE start > ? AND start < ? AND type = ? AND username = ?" , data)

@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands
 import json
 app = Flask(__name__)
 
@@ -49,7 +49,8 @@ def create(username):
         return redirect(f"/home/{username}")
     
     if request.args['type'] == "errand":
-        new_task(type = 'errand', title = request.args['title'] , username = username)
+        start = datetime.now().strftime('%Y-%m-%dT%H:%M')
+        new_task(type = 'errand', title = request.args['title'] , username = username , start = start )
         return redirect(f"/home/{username}")
     else:
         new_task(request.args['type'], title = request.args['title'] ,start = request.args['start'] , end = request.args['end'],recurrence = recurrence, username = username )
@@ -101,3 +102,22 @@ def update(username):
 def signup():
     session['message'] = sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])
     return redirect("/")
+
+@app.route('/analytics')
+def analytics():
+    return render_template("week.html", username = "nimrof")
+
+@app.route('/data')
+def data():
+    start = request.args['start']
+    end = request.args['end']
+    username = request.args['username']
+    return render_template('data.html' , start = start , end = end , username =username)
+
+@app.route('/errands/<start>/<end>/<username>')
+def errands(start , end , username):
+    errands_list = get_errands(start , end , username)
+    title_list = []
+    for errand in errands_list:
+        title_list.append(errand[2])
+    return title_list
