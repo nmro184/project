@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits
 import json
 app = Flask(__name__)
 
@@ -121,3 +121,28 @@ def errands(start , end , username):
     for errand in errands_list:
         title_list.append(errand[2])
     return title_list
+
+@app.route('/habits/<start>/<end>/<username>')
+def habits(start , end , username):
+    habits_tuple_list = get_habits(start , end , username)
+    habit_list = []
+    for habit in habits_tuple_list:
+        habit_dict = {
+            'id': habit[0],
+            'type' : habit[1],
+            'title' : habit[2],
+            'start' : habit[3],
+            'end' : habit[4],
+            'recurrence' : habit[5],
+            'done' : habit[6],
+            'username' : habit[7]
+        }
+        habit_list.append(habit_dict)
+    return habit_list
+@app.route('/get_users')
+def Users():
+    users_list = get_users()
+    users_dict_list = []
+    for user in users_list:
+        users_dict_list.append(user.to_dict())
+    return jsonify(users_dict_list)

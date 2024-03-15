@@ -136,14 +136,11 @@ var calender;
 
                     // Navigate to the new page
                     window.location.href = url;
-
-                    alert('Week Recap button clicked!');
                 },
                 
             }
         },
         datesSet: function(info) {
-            console.log('nananana');
             var weekRecapButton = document.querySelector('.fc-weekRecapButton-button');
             weekRecapButton.dataset.start = formatDate(info.start);
             weekRecapButton.dataset.end = formatDate(info.end);
@@ -407,4 +404,52 @@ function addErrands() {
   function updateEndTime(value) {
     // Set the value of the end input field to the value of the start input field
     document.getElementById("end-time-input").value = value;
+}
+function toggleFriendSearch(){
+    search = document.getElementById("search-bar");
+    if (search.style.visibility === 'hidden') {
+        search.style.visibility = 'visible';
+    } else {
+        search.style.visibility = 'hidden';
+    }
+
+}
+
+function searchFriends(value){
+    if (value.trim() === ""){
+        var userListElement = document.getElementById('friend-list');
+        userListElement.innerHTML = ''; // Clear previous results
+        return;
+    }
+    fetch('/get_users')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(users => {
+        // Handle the response data (list of users)
+        var searchedList = users.filter(function(user) {
+            return user.name.toLowerCase().includes(value.toLowerCase());
+        });
+        displayUsers(searchedList)
+    })
+    .catch(error => {
+        // Handle errors
+        console.error('There was a problem with the fetch operation:', error);
+    });
+
+}
+    function displayUsers(users) {
+        var userListElement = document.getElementById('friend-list');
+        userListElement.innerHTML = ''; // Clear previous results
+    
+        // Create list items for each user and append them to the list
+        users.forEach(function(user) {
+            var listItem = document.createElement('li');
+            listItem.textContent = user.name;
+            userListElement.appendChild(listItem);
+        });
+    
 }

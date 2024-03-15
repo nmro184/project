@@ -19,6 +19,11 @@
 <body>
     <header>
         <h2 class = "welcome">{{username}}</h2>
+        <div class="search">
+            <button onclick="toggleFriendSearch()">add friend</button>
+            <input id = "search-bar" type="search" class = "search-bar" style="visibility: hidden;" oninput="searchFriends(this.value)">
+            <ul id="friend-list"></ul>
+        </div>
         <a href="/" class = "logout-button">log out</a>
     </header>
     <main>

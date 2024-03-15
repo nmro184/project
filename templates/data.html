@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/data.css">
     <script>
         var username = '{{username}}';
     </script>
@@ -11,10 +12,19 @@
     <title>Document</title>
 </head>
 <body>
-    <ul id = 'errands-list'>
+    <div id = 'habits-list'>
 
-    </ul>
-    <button onClick = "backHome()"> back</button>
+    </div>
+    <div class =  'data-matrix'>
+        <ul id = 'errands-list'>
+
+        </ul>
+    </div>
+    <button onClick = "backHome()" class = "back-button"> back</button>
 </body>
-<script> addErrands('{{start}}' , '{{end}}')</script>
+<script> 
+    addErrands('{{start}}' , '{{end}}');
+    addHabits('{{start}}' , '{{end}}');
+
+</script>
 </html>

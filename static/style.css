@@ -108,7 +108,12 @@ header{
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 .welcome{
-    margin-right: auto;
+    margin-right: 0;
+}
+.search-bar {
+    width: 150px; /* Set fixed width for the search input */
+    margin: 0 auto; /* Center the search input horizontally */
+    flex-shrink: 0; /* Prevent the search input from shrinking */
 }
 .delete-button {
     background-color: #d74a58;

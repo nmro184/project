@@ -1,0 +1,67 @@
+/* Style for the body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Style for the container div */
+.data-matrix {
+    gap: 50px;
+    padding: 20px;
+}
+
+/* Style for the errands list */
+#errands-list {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
+
+/* Style for the habit list */
+#habits-list {
+    margin-top: 20px; /* Space between the two lists */
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+}
+
+/* Style for the progress indicator in habit items */
+/* Style for the habit div */
+.habit-div {
+    border: 1px solid #ccc; /* Add border around the div */
+    padding: 10px; /* Add padding inside the div */
+    margin-bottom: 10px; /* Space between each div */
+    align-items: center; 
+}
+
+/* Style for the progress div */
+.progress {
+    background-color: #e0e0e0; /* Gray background for progress bar */
+    height: auto;
+    width: auto;
+    display: flex; /* Use flexbox layout */
+    justify-content: center; /* Center-align content horizontally */
+    align-items: center; /* Center-align content vertically */
+    padding: 0 10px; /* Add padding for better appearance */
+}
+
+/* Style for the back button */
+.back-button {
+    margin-top: 20px; /* Space between the lists and button */
+    padding: 10px 20px; /* Padding around button text */
+    background-color: #4caf50; /* Green background color */
+    color: white; /* White text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor on hover */
+}
+
+/* Hover effect for back button */
+.back-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
