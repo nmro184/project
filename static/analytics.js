@@ -1,15 +1,19 @@
 function addErrands(start, end) {
-  var list = document.getElementById('errands-list');
-  
+  var doneList = document.getElementById('errands-done-list');
+  var notDoneList = document.getElementById('errands-not-done-list');
   // Call getErrands to fetch errands data
   getErrands(start, end)
       .then(errandsList => {
           // Iterate over the fetched errandsList and append to the errands-list element
           errandsList.forEach(errand => {
               var errandli = document.createElement('li');
-              errandli.textContent = errand;
-              list.appendChild(errandli);
-          });
+              errandli.textContent = errand.title;
+              if(errand.done == '0' || errand.end > end){
+                notDoneList.appendChild(errandli);
+              }else{
+                doneList.appendChild(errandli);
+              }
+            });
       })
       .catch(error => {
           console.error('Error fetching or adding errands:', error);

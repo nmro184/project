@@ -86,13 +86,14 @@ var calender;
             doneButton.textContent = 'Done';
             doneButton.addEventListener('click', function() {
                 // Call a function to handle done action
-                doneTask(event.id);
+                doneTask(event.id , 'habit');
             });
             optionBar.appendChild(doneButton);
             // Add the option bar above the clicked event
             var eventElement = info.el;
             optionBar.style.display = 'none';
             eventElement.appendChild(optionBar);
+
         },
         eventClick:function(info){
             optionBar = document.getElementById(`optionBar${info.event.id}`);
@@ -257,7 +258,7 @@ function getTasks() {
             throw error; // Propagate the error to the caller
         });
 }
-function addEvent(id ,title, start, end , recurrence) {
+function addEvent(id ,title, start, end ,done, recurrence) {
     // Create a new event object
   var newEvent = {
       title: title,
@@ -268,7 +269,10 @@ function addEvent(id ,title, start, end , recurrence) {
     if (recurrence != ''){
       newEvent.recurrence_id = recurrence.group_id
     }
-  
+    if (done == 1) {
+        newEvent.color = 'purple'; // Set the color property dynamically
+    }
+
     var addedEvent = calendar.addEvent(newEvent);
   return addedEvent;
 }
@@ -277,7 +281,7 @@ function addEvents() {
       .then(tasks => {
           tasks.map(task =>{
               if (task.type !== "errand") {
-                  addEvent(id = task.id, title = task.title, start = task.start, end = task.end , recurrence = task.recurrence);
+                  addEvent(id = task.id, title = task.title, start = task.start, end = task.end , done = task.done, recurrence = task.recurrence);
               }
           })
       })
@@ -293,9 +297,9 @@ function toggleForm() {
     }
 }
 
-function doneTask(task_id) {
+function doneTask(task_id , type) {
     
-    fetch(`/done/${task_id}/${username}`)
+    fetch(`/done/${task_id}/${type}/${username}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -304,6 +308,10 @@ function doneTask(task_id) {
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
         });
+        if (type == "habit"){
+            var habit = calendar.getEventById(task_id);
+            habit.setProp('color', 'purple');
+        }
 }
 function toggleEdit(id){
     var editForm = document.getElementById("editform");
@@ -380,7 +388,7 @@ function addErrand(task) {
     var doneButton = document.createElement('button');
     doneButton.textContent = 'Done';
     doneButton.onclick = function() {
-        doneTask(task.id); // Call deleteTask with task id
+        doneTask(task.id , 'errand'); // Call deleteTask with task id
     };
     doneButton.id = `done${task.id}`
     doneButton.style.display ='none'

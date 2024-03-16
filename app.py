@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand
 import json
 app = Flask(__name__)
 
@@ -61,9 +61,12 @@ def delete(username , id):
     delete_task(id)
     return redirect(f"/home/{username}")
 
-@app.route('/done/<task_id>/<username>')
-def done(task_id , username):
-    done_task(task_id)
+@app.route('/done/<task_id>/<type>/<username>')
+def done(task_id ,type , username):
+    if type == 'habit':
+        done_task(task_id)
+    else:
+        done_errand(task_id)
     return redirect(f"/home/{username}")
 
 @app.route('/api/task/<task_id>')
@@ -116,11 +119,20 @@ def data():
 
 @app.route('/errands/<start>/<end>/<username>')
 def errands(start , end , username):
-    errands_list = get_errands(start , end , username)
-    title_list = []
-    for errand in errands_list:
-        title_list.append(errand[2])
-    return title_list
+    errands_tuple_list = get_errands(username)
+    errands_list = []
+    for errand in errands_tuple_list:
+        if errand[6] == 0 or (errand[3] >= start and errand[3] <= end):
+            errands_list.append({
+                'id' : errand[0],
+                'type' : errand[1],
+                'title' : errand[2],
+                'start' : errand[3],
+                'end': '' if errand[4] is None else errand[4],
+                'done' : errand[6] ,
+                'username' : errand[7],
+            })
+    return errands_list
 
 @app.route('/habits/<start>/<end>/<username>')
 def habits(start , end , username):

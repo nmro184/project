@@ -24,6 +24,15 @@ def delete_task(id):
 def done_task(task_id):
     query(f"UPDATE tasks SET done = 1 WHERE id = {task_id}")
 
+def done_errand(task_id):
+    now = datetime.now()
+
+    # Format the datetime as a string in the desired format
+    formatted_now = now.strftime('%Y-%m-%dT%H:%M')
+
+    # Assuming query is a function to execute SQL queries
+    query(f"UPDATE tasks SET done = 1, end = '{formatted_now}' WHERE id = {task_id}")
+
 def get_done_tasks():
      task_tuple_list = query("SELECT * FROM tasks WHERE done = 1 ")
      return [Task(task) for task in task_tuple_list]
@@ -108,9 +117,9 @@ def add_hours(date_string, hours_to_add):
 
     return modified_date_string
 
-def get_errands(start , end , username):
-    data = (start, end, 'errand' , username)
-    return query(f"SELECT * FROM tasks WHERE start > ? AND start < ? AND type = ? AND username = ?" , data)
+def get_errands(username):
+    data = ( 'errand' , username)
+    return query(f"SELECT * FROM tasks WHERE type = ? AND username = ?" , data)
 
 def get_habits(start , end , username):
     data = (start, end, 'habit' , username)
