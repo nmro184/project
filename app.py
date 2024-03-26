@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand , send_friend_request
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand , send_friend_request , get_friend_requests , get_id_by_username , accept , deny
 import json
 app = Flask(__name__)
 
@@ -162,4 +162,26 @@ def get_users_py():
 @app.route('/frequest/<username>/<friend>')
 def friend_request(username , friend):
     send_friend_request(sent_by = username , sent_to =friend)
+    return "True"
+
+@app.route('/get_friend_requests/<username>')
+def get_friend_requests_py(username):
+    friend_requests_list = []
+    friend_requests=  get_friend_requests(username)
+    for request in friend_requests:
+        friend_requests_list.append({
+           'sent_by' : request[0],
+           'sent_to' : request[1],
+           'status' : request[2]
+        })
+    return jsonify(friend_requests_list)
+
+@app.route('/accept/<sent_by>/<sent_to>')
+def accept_friend_request(sent_by , sent_to):
+    accept(sent_by,sent_to)
+    return "True"
+
+@app.route('/deny/<sent_by>/<sent_to>')
+def deny_friend_request(sent_by , sent_to):
+    deny(sent_by,sent_to)
     return "True"

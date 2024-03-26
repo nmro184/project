@@ -129,3 +129,23 @@ def send_friend_request(sent_by , sent_to):
     data = (sent_by , sent_to , 'pending')
     query("INSERT INTO friend_requests (sent_by , sent_to , status) VALUES (? , ? , ?)", data)
     return "friend request sent!"
+
+def get_friend_requests(username):
+    data = (username , "pending")
+    friend_requests = query("SELECT * FROM friend_requests WHERE sent_to = ? AND status = ?",data )
+    return friend_requests
+
+def get_id_by_username(username):
+    data = (username,)
+    id = query("SELECT id FROM users WHERE username = ? ",data )
+    return id[0][0]
+
+def accept(sent_by,sent_to):
+    data = ('accepted' , sent_by , sent_to)
+    query(f"UPDATE friend_requests SET status = ? WHERE sent_by = ? AND sent_to = ? AND status = 'pending'" , data)
+    return 'lolo'
+
+def deny(sent_by,sent_to):
+    data = ('denied' , sent_by , sent_to)
+    query(f"UPDATE friend_requests SET status = ? WHERE sent_by = ? AND sent_to = ? AND status = 'pending'" , data)
+    return 'lolo'

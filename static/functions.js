@@ -457,9 +457,9 @@ function searchFriends(value){
         users.forEach(function(user) {
             if(user.username !== username ){
                 var listItem = document.createElement('li');
-                listItem.textContent = user.name;
+                listItem.textContent = user.username;
                 listItem.onclick = function(){
-                    sendFriendRequest(user.name)
+                    sendFriendRequest(user.username)
                 }
             
             userListElement.appendChild(listItem);
@@ -480,7 +480,81 @@ function sendFriendRequest(friend){
             console.error('There was a problem with your fetch operation:', error);
         });
 }
-function notiflicationList(){
-    list = document.getElementById("notiflication-list");
+function notiflicationList(username){
+    var list = document.getElementById("notiflication-list");
+    list.style.display = "block";
+    list.innerHTML = '';
+    closeListButton = document.createElement('button');
+    closeListButton.onclick =function(){ 
+        closeList();
+    }
+    list.appendChild(closeListButton);
+    fetch(`/get_friend_requests/${username}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(requests => {
+            requests.forEach(request =>{
+                var requestli= document.createElement('li');
+                requestli.textContent = request.sent_by;
+                requestli.className = 'friend-request';
+                var buttonsDiv = document.createElement('div');
+                buttonsDiv.className = "friend-request-buttons-div"
+                var acceptButton = document.createElement('button');
+                acceptButton.textContent = "accept";
+                acceptButton.className = "accept-button";
+                acceptButton.onclick = function(){
+                    accept(request.sent_by , request.sent_to);
+                }
+                var denyButton = document.createElement('button');
+                denyButton.textContent = "deny";
+                denyButton.className = "deny-button";
+                denyButton.onclick = function(){
+                    deny(request.sent_by , request.sent_to);
+                }
+                buttonsDiv.appendChild(acceptButton);
+                buttonsDiv.appendChild(denyButton);
+                requestli.appendChild(buttonsDiv)
+                list.appendChild(requestli);
+
+
+            });
+            // Handle the response data (list of users)
+            
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+            
+        
+}
+function accept(sent_by , sent_to){
+    fetch(`/accept/${sent_by}/${sent_to}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+}
+function deny(sent_by , sent_to){
+    fetch(`/deny/${sent_by}/${sent_to}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
     
+}
+function closeList(){
+    var notiflication = document.getElementById("notiflication-list");
+    notiflication.style.display = "none";
 }

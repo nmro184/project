@@ -376,3 +376,49 @@ form input::placeholder {
     cursor: pointer;
     /* Add additional styling here */
 }
+.notiflication-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Style for friend request list item */
+.friend-request {
+    list-style-type: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Style for friend request buttons container */
+.friend-request-buttons-div {
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Style for accept button */
+.accept-button, .deny-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept-button {
+    background-color: #5cb85c; /* Green */
+    color: white;
+}
+
+.deny-button {
+    background-color: #d9534f; /* Red */
+    color: white;
+}
+
+/* Hover effect for buttons */
+.accept-button:hover, .deny-button:hover {
+    opacity: 0.8;
+}
+.notiflication-button{
+    margin-left : 35px;
+}

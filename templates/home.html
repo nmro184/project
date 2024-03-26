@@ -19,7 +19,10 @@
 <body>
     <header>
         <h2 class = "welcome">{{username}}</h2>
-        <button id = "notiflictions-button" class = "notiflication-button" onclick="notiflicationslist()"></button>
+        <div id = "notiflication-div" class="notiflication-div">
+            <button id = "notiflications-button" class = "notiflication-button" onclick="notiflicationList('{{username}}')"></button>
+            <ul id = notiflication-list class="notiflication-list"></ul>
+        </div>
         <div class="search">
             <button onclick="toggleFriendSearch()" class="add-friend-button"></button>
             <input id = "search-bar" type="search" class = "search-bar" style="visibility: hidden;" oninput="searchFriends(this.value)">
