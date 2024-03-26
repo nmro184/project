@@ -291,6 +291,23 @@ form input::placeholder {
     background-image: url('/static/recurrence-icon.jpeg'); /* Path to your recurrence icon */
     background-size: cover; /* Ensure the image covers the element */
 }
+.add-friend-button {
+    margin-top : 10px;
+    margin-left: 10px;
+    width: 30px; /* Adjust the width */
+    height: 30px; /* Adjust the height */
+    background-image: url('/static/add-friend-icon.png'); /* Path to your recurrence icon */
+    background-size: cover; /* Ensure the image covers the element */
+}
+
+.notiflication-button {
+    margin-top : 10px;
+    margin-left: 10px;
+    width: 30px; /* Adjust the width */
+    height: 30px; /* Adjust the height */
+    background-image: url('/static/notiflication-icon.jpeg'); /* Path to your recurrence icon */
+    background-size: cover; /* Ensure the image covers the element */
+}
 
 
 .option-bar {
@@ -348,4 +365,14 @@ form input::placeholder {
 /* Style for button hover effect */
 .option-bar2 button:hover {
     background-color: #0056b3;
+}
+
+#friend-list {
+    list-style-type: none; /* Remove default bullet points */
+    box-shadow: none;
+}
+
+#friend-list li:hover {
+    cursor: pointer;
+    /* Add additional styling here */
 }

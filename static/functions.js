@@ -441,7 +441,7 @@ function searchFriends(value){
         var searchedList = users.filter(function(user) {
             return user.name.toLowerCase().includes(value.toLowerCase());
         });
-        displayUsers(searchedList)
+        displayUsers(searchedList , username)
     })
     .catch(error => {
         // Handle errors
@@ -449,15 +449,38 @@ function searchFriends(value){
     });
 
 }
-    function displayUsers(users) {
+    function displayUsers(users , username) {
         var userListElement = document.getElementById('friend-list');
         userListElement.innerHTML = ''; // Clear previous results
     
         // Create list items for each user and append them to the list
         users.forEach(function(user) {
-            var listItem = document.createElement('li');
-            listItem.textContent = user.name;
+            if(user.username !== username ){
+                var listItem = document.createElement('li');
+                listItem.textContent = user.name;
+                listItem.onclick = function(){
+                    sendFriendRequest(user.name)
+                }
+            
             userListElement.appendChild(listItem);
+            }
         });
+    
+}
+
+function sendFriendRequest(friend){
+    console.log("dada")
+    return fetch(`/frequest/${username}/${friend}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+}
+function notiflicationList(){
+    list = document.getElementById("notiflication-list");
     
 }

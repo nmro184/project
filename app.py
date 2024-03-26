@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand , send_friend_request
 import json
 app = Flask(__name__)
 
@@ -76,7 +76,7 @@ def get_task_api(task_id):
     return jsonify(j_task)
 
 @app.route('/api/tasks/<username>')
-def json_tasks(username):
+def get_tasks_py(username):
     json_tasks = []
     for task in get_tasks(username):
         json_tasks.append((task.to_dict()))
@@ -118,7 +118,7 @@ def data():
     return render_template('data.html' , start = start , end = end , username =username)
 
 @app.route('/errands/<start>/<end>/<username>')
-def errands(start , end , username):
+def get_errands_py(start , end , username):
     errands_tuple_list = get_errands(username)
     errands_list = []
     for errand in errands_tuple_list:
@@ -135,7 +135,7 @@ def errands(start , end , username):
     return errands_list
 
 @app.route('/habits/<start>/<end>/<username>')
-def habits(start , end , username):
+def get_habits_py(start , end , username):
     habits_tuple_list = get_habits(start , end , username)
     habit_list = []
     for habit in habits_tuple_list:
@@ -152,9 +152,14 @@ def habits(start , end , username):
         habit_list.append(habit_dict)
     return habit_list
 @app.route('/get_users')
-def Users():
+def get_users_py():
     users_list = get_users()
     users_dict_list = []
     for user in users_list:
         users_dict_list.append(user.to_dict())
     return jsonify(users_dict_list)
+
+@app.route('/frequest/<username>/<friend>')
+def friend_request(username , friend):
+    send_friend_request(sent_by = username , sent_to =friend)
+    return "True"

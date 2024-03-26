@@ -124,3 +124,8 @@ def get_errands(username):
 def get_habits(start , end , username):
     data = (start, end, 'habit' , username)
     return query(f"SELECT * FROM tasks WHERE start > ? AND start < ? AND type = ? AND username = ?" , data)
+
+def send_friend_request(sent_by , sent_to):
+    data = (sent_by , sent_to , 'pending')
+    query("INSERT INTO friend_requests (sent_by , sent_to , status) VALUES (? , ? , ?)", data)
+    return "friend request sent!"

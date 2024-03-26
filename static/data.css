@@ -65,3 +65,39 @@ body {
 .back-button:hover {
     background-color: #45a049; /* Darker green on hover */
 }
+.errands-matrix {
+    display: flex;
+    flex-direction: row;
+    gap: 40px; /* Align items to the left */
+}
+ul {
+    text-align: left;
+}
+.done-list ul,
+.notdone-list ul {
+    text-align: left;
+    padding-left: 0; /* Remove default padding */
+    margin-left: 0; /* Remove default margin */
+    list-style-position: inside; /* Place list item markers inside the list items */
+}
+
+.done-list,
+.notdone-list {
+    text-align: left;
+    padding-left: 0; /* Remove default padding */
+    margin-left: 0; /* Remove default margin */
+    list-style-position: inside; /* Place list item markers inside the list items */
+}
+
+.done-list li{
+    text-align: left;
+    padding-left: 0; /* Remove default padding */
+    margin-left: 0; /* Remove default margin */
+    list-style-position: inside; /* Place list item markers inside the list items */
+}
+.notdone-list li {
+    text-align: left;
+    padding-left: 0; /* Remove default padding */
+    margin-left: 0; /* Remove default margin */
+    list-style-position: inside; /* Place list item markers inside the list items */
+}

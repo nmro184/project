@@ -3,3 +3,6 @@ __pycache__/classes.cpython-310.pyc
 __pycache__/app.cpython-310.pyc
 __pycache__/db.cpython-310.pyc
 __pycache__/app.cpython-310.pyc
+__pycache__/test_app.cpython-310-pytest-7.4.4.pyc
+.gitignore
+__pycache__/app.cpython-310.pyc

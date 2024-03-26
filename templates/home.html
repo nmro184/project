@@ -19,8 +19,9 @@
 <body>
     <header>
         <h2 class = "welcome">{{username}}</h2>
+        <button id = "notiflictions-button" class = "notiflication-button" onclick="notiflicationslist()"></button>
         <div class="search">
-            <button onclick="toggleFriendSearch()">add friend</button>
+            <button onclick="toggleFriendSearch()" class="add-friend-button"></button>
             <input id = "search-bar" type="search" class = "search-bar" style="visibility: hidden;" oninput="searchFriends(this.value)">
             <ul id="friend-list"></ul>
         </div>
