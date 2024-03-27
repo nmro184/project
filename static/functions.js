@@ -589,7 +589,7 @@ function addFriends(){
             friendli.textContent = friend.username;
             friendli.className = 'friendli';
             friendli.onclick = function(){
-                console.log(friend.username);
+                view_calender(friend.username);
             }
             friendsList.appendChild(friendli);
     
@@ -601,4 +601,9 @@ function addFriends(){
     });
         
     
+}
+
+function view_calender(friend){
+    url = `/friendview/${username}/${friend}`
+    window.location.href = url;
 }

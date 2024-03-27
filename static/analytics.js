@@ -98,7 +98,10 @@ function getHabits(start, end) {
       });
 }
 
-function backHome(){
-
-  window.location.href = `/home/${username}`;
+function backHome(viewer){
+  if (viewer == 'none'){
+    window.location.href = `/home/${username}`;
+  }else{
+    window.location.href = `friendview/${viewer}/${username}`
+  }
 }

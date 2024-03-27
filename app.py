@@ -36,6 +36,10 @@ def validate_login():
 def home(username):
     return render_template("home.html" , tasks = get_tasks(username) , username = username)
 
+@app.route('/friendview/<username>/<friend>')
+def friendview(username , friend):
+    return render_template("friend.html" , tasks = get_tasks(username) , username = friend , viewer = username)
+
 #the route /create is used for entring a new task into the DB
 @app.route('/create/<username>' , methods = ['POST' , 'GET'])
 def create(username):
@@ -106,16 +110,15 @@ def signup():
     session['message'] = sign_up(name = request.form['name'] , email = request.form['email'] , phone = request.form['phone'] , username = request.form['username'] , password = request.form['password'])
     return redirect("/")
 
-@app.route('/analytics')
-def analytics():
-    return render_template("week.html", username = "nimrof")
-
 @app.route('/data')
 def data():
     start = request.args['start']
     end = request.args['end']
     username = request.args['username']
-    return render_template('data.html' , start = start , end = end , username =username)
+    viewer = request.args.get('viewer')
+    if viewer is None:
+        viewer = "none"
+    return render_template('data.html' , start = start , end = end , username =username , viewer = viewer)
 
 @app.route('/errands/<start>/<end>/<username>')
 def get_errands_py(start , end , username):

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/friends_functions.js" defer ></script>
+    <script> 
+        var username = "{{username}}";
+        var viewer = "{{viewer}}";
+    </script>
+</head>
+<body>
+    <header>
+        <h2 class = "welcome">{{username}}</h2>
+        <div id = "notiflication-div" class="notiflication-div">
+            <button id = "notiflications-button" class = "notiflication-button" onclick="notiflicationList('{{username}}')"></button>
+            <ul id = notiflication-list class="notiflication-list" style = "display:none"></ul>
+        </div>
+        <div class="search">
+            <button onclick="toggleFriendSearch()" class="add-friend-button"></button>
+            <input id = "search-bar" type="search" class = "search-bar" style="visibility: hidden;" oninput="searchFriends(this.value)">
+            <ul id="friend-list"></ul>
+        </div>
+        <ul id = "friends-list" class = "friend-list"></ul>
+        <a href="/home/{{viewer}}" class = "logout-button">return</a>
+    </header>
+    <main>
+        <!-- Form for creating new tasks -->
+        <form action="/create/{{username}}" class="create" id="createForm" style="display: none;">
+            <div id = "welcome" class = "welcome">Add New Task</div>
+            <div class = "buttons-container" id ="buttons-div">
+                <button id = "errand-button" class ="form-type" onclick="toggleCreate(event ,'errand')">Errand</button>
+                <button id = "routine-button" class ="form-type" onclick="toggleCreate(event ,'routine')">Routine</button>
+                <button id = "habit-button" class = "pressed" onclick="toggleCreate(event , 'habit')">Habit</button>
+                <button class = "recurrence-button" onclick="togglerecurrence(event)"></button>
+            </div>
+            <input id = "recurrence-flag" type="hidden" name = "recurrence-flag" value ="off">
+            <input type="text" name="title" placeholder="task title">
+            <input id = "start-time-input" type="datetime-local" name = "start" placeholder="start time" onchange="updateEndTime(this.value)"> 
+            <input id = "end-time-input" type="datetime-local" name = "end" placeholder="end time"> 
+            <input type="hidden" id ="type-input" value="habit" name = "type">
+            <div id="recurrenceForm" class ="recurrence-form" style = "display: none;">
+
+                <label id = "days-label" class="days-label">Days of the Week:</label><br>
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="sunday" name="daysOfWeek" value="0" style="margin-right: 5px;">
+                    <label for="sunday">Sunday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="monday" name="daysOfWeek" value="1" style="margin-right: 5px;">
+                    <label for="monday">Monday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="tuesday" name="daysOfWeek" value="2" style="margin-right: 5px;">
+                    <label for="tuesday">Tuesday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="wednesday" name="daysOfWeek" value="3" style="margin-right: 5px;">
+                    <label for="wednesday">Wednesday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="thursday" name="daysOfWeek" value="4" style="margin-right: 5px;">
+                    <label for="thursday">Thursday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="friday" name="daysOfWeek" value="5" style="margin-right: 5px;">
+                    <label for="friday">Friday</label>
+                </div>
+                
+                <div class="day-checkbox" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="saturday" name="daysOfWeek" value="6" style="margin-right: 5px;">
+                    <label for="saturday">Saturday</label>
+                </div>
+                <div>
+                    <label for=""> insert recurrence end date</label>
+                    <input id = "end-recurrence-input" type="date" name = "end-recurrence"> 
+                </div>
+
+            </div>
+              
+            <input type="submit">
+        </form>
+        
+        <form action="/edit/{{username}}" class="edit" id="editform" style="display: none;">
+            <div class = "welcome">Edit Task</div>
+            <input type="text" name="title" placeholder="task title">
+            <input type="datetime-local" name = "start" placeholder="start time"> 
+            <input type="datetime-local" name = "end" placeholder="end time"> 
+            <input type="hidden" name ="id"> 
+            <input type="submit">
+        </form>
+        <!-- Button to toggle the form visibility -->
+        <div class="line">
+            <button onclick="toggleForm()" class="create-button"></button>
+        </div>
+            <ul id ='taskList' ></ul>
+        
+            <div id='calendar'></div>
+        
+    </main>
+</body>
+</html>
