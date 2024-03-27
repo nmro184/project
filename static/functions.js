@@ -119,6 +119,7 @@ var calender;
             });
 
             addEvents();
+            addFriends();
         },
         headerToolbar: {
             left: 'prev,next today', // Add buttons for previous, next, and today
@@ -484,11 +485,26 @@ function notiflicationList(username){
     var list = document.getElementById("notiflication-list");
     list.style.display = "block";
     list.innerHTML = '';
-    closeListButton = document.createElement('button');
-    closeListButton.onclick =function(){ 
+    clearButton = document.createElement('button');
+    clearButton.onclick =function(){ 
         closeList();
     }
-    list.appendChild(closeListButton);
+    clearButton.className = 'clear-button';
+    //var clearButtonIcon = document.createElement('i');
+    //clearButtonIcon.className = 'clear-button-icon';
+    //clearButtonIcon.textContent = 'x'; 
+    // Create SVG element for clear button icon
+    var clearButtonIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    clearButtonIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clearButtonIcon.setAttribute('fill', 'currentColor');
+    clearButtonIcon.setAttribute('viewBox', '0 0 24 24');
+    clearButtonIcon.setAttribute('width', '24');
+    clearButtonIcon.setAttribute('height', '24');
+    clearButtonIcon.innerHTML = '<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>';
+
+    clearButton.appendChild(clearButtonIcon);
+
+    list.appendChild(clearButton);
     fetch(`/get_friend_requests/${username}`)
         .then(response => {
             if (!response.ok) {
@@ -557,4 +573,32 @@ function deny(sent_by , sent_to){
 function closeList(){
     var notiflication = document.getElementById("notiflication-list");
     notiflication.style.display = "none";
+}
+function addFriends(){
+    var friendsList = document.getElementById("friends-list")
+    fetch(`/get_friends/${username}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(friends => {
+        friends.forEach(friend =>{
+            var friendli= document.createElement('li');
+            friendli.textContent = friend.username;
+            friendli.className = 'friendli';
+            friendli.onclick = function(){
+                console.log(friend.username);
+            }
+            friendsList.appendChild(friendli);
+    
+        });
+    })
+
+    .catch(error => {
+        console.error('There was a problem with your fetch operation:', error);
+    });
+        
+    
 }

@@ -421,4 +421,17 @@ form input::placeholder {
 }
 .notiflication-button{
     margin-left : 35px;
+    margin-top: -5px;
 }
+.clear-button {
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Clear button icon */
+  .clear-button-icon {
+    font-size: 16px;
+    color: #999;
+  }

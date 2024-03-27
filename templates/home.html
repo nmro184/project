@@ -21,13 +21,14 @@
         <h2 class = "welcome">{{username}}</h2>
         <div id = "notiflication-div" class="notiflication-div">
             <button id = "notiflications-button" class = "notiflication-button" onclick="notiflicationList('{{username}}')"></button>
-            <ul id = notiflication-list class="notiflication-list"></ul>
+            <ul id = notiflication-list class="notiflication-list" style = "display:none"></ul>
         </div>
         <div class="search">
             <button onclick="toggleFriendSearch()" class="add-friend-button"></button>
             <input id = "search-bar" type="search" class = "search-bar" style="visibility: hidden;" oninput="searchFriends(this.value)">
             <ul id="friend-list"></ul>
         </div>
+        <ul id = "friends-list" class = "friend-list"></ul>
         <a href="/" class = "logout-button">log out</a>
     </header>
     <main>

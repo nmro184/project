@@ -142,10 +142,25 @@ def get_id_by_username(username):
 
 def accept(sent_by,sent_to):
     data = ('accepted' , sent_by , sent_to)
-    query(f"UPDATE friend_requests SET status = ? WHERE sent_by = ? AND sent_to = ? AND status = 'pending'" , data)
+    query("UPDATE friend_requests SET status = ? WHERE sent_by = ? AND sent_to = ? AND status = 'pending'" , data)
+    data = (sent_by , sent_to)
+    query(f"INSERT INTO friends (user1 , user2) VALUES (?,?)" , data)
     return 'lolo'
 
 def deny(sent_by,sent_to):
     data = ('denied' , sent_by , sent_to)
     query(f"UPDATE friend_requests SET status = ? WHERE sent_by = ? AND sent_to = ? AND status = 'pending'" , data)
     return 'lolo'
+
+def friends(user1, user2):
+    data = (user1, user2)
+    flag = False
+    friendship = query("SELECT * FROM friend_requests WHERE (sent_by = ? AND sent_to = ? OR sent_by = ? AND sent_to = ?) AND (status = 'pending' OR status = 'accepted')", (data[1], data[0], data[0], data[1]))
+    if friendship:
+        flag = True
+    return flag
+
+def get_friends(username):
+    return query("SELECT CASE WHEN user1 = ? THEN user2 WHEN user2 = ? THEN user1 END FROM friends" , (username , username))
+
+   

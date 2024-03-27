@@ -1,6 +1,6 @@
 from flask import Flask , render_template ,  redirect , request , jsonify  , session
 from datetime import datetime
-from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand , send_friend_request , get_friend_requests , get_id_by_username , accept , deny
+from db import new_task , get_tasks , delete_task , done_task , get_task , edit_task , sign_up , get_users , new_recurreing_task , edit_recurring_task , get_errands , get_habits , done_errand , send_friend_request , get_friend_requests ,friends, accept , deny , get_friends
 import json
 app = Flask(__name__)
 
@@ -161,7 +161,9 @@ def get_users_py():
 
 @app.route('/frequest/<username>/<friend>')
 def friend_request(username , friend):
-    send_friend_request(sent_by = username , sent_to =friend)
+    friendship = friends(username , friend)
+    if not friendship:
+        send_friend_request(sent_by = username , sent_to =friend)
     return "True"
 
 @app.route('/get_friend_requests/<username>')
@@ -185,3 +187,13 @@ def accept_friend_request(sent_by , sent_to):
 def deny_friend_request(sent_by , sent_to):
     deny(sent_by,sent_to)
     return "True"
+
+@app.route('/get_friends/<username>')
+def get_friends_py(username):
+    friends = []
+    friends_tuple = get_friends(username)
+    for friend in friends_tuple:
+        friends.append({
+            'username' : friend
+        })
+    return jsonify( friends)
